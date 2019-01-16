@@ -3,7 +3,7 @@ import re
 
 
 def matrix_maker():
-    with open(r"../mapmatrixv2.txt", "r") as map:
+    with open(r"maps/mapmatrixv2.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
         i = 1
@@ -21,7 +21,7 @@ def matrix_maker():
 
 def matrix_writer():
     matrix = matrix_maker()
-    with open(r"../mapmatrix01v2.txt", "w") as write_map:
+    with open(r"maps/mapmatrix01v2.txt", "w") as write_map:
         writer = c.writer(write_map)
         for i in matrix:
             writer.writerow(i)
@@ -30,7 +30,7 @@ def matrix_writer():
 
 
 def matrix_reader():
-    with open(r"../PTW\mapmatrix01v2.txt", "r") as map:
+    with open(r"maps/mapmatrix01v2.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
         i = 0
@@ -44,6 +44,6 @@ def matrix_reader():
     #print(better[15][80])
     return(better)
 
-matrix_maker()
-matrix_writer()
+#matrix_maker()
+#matrix_writer()
 print(matrix_reader())
