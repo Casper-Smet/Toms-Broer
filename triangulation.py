@@ -1,13 +1,5 @@
 import math
 
-P0 = [2,2]
-P1 = [4,9]
-P2 = [16,2]
-
-r0 = math.sqrt(37)
-r1 = math.sqrt(52)
-r2 = math.sqrt(65)
-
 def cc_intersection(P0, P1, r0, r1):
 
 	P2 = [None,None]
@@ -50,16 +42,52 @@ def location(P0, P1, P2, r0, r1, r2):
 				if p[0][i] == p[1][0] == p[2][k]:
 					return p[0][i]
 
-def dBm2m():
+def dBm2m(MHz, dBm):
 	from math import log10
 
-	MHz = int(input('WiFi Frequency in MHz (2412, 5180, ...): '))
-	dBm = int(input('Detected signal strength in dBm (-53, -78, ...): '))
-
-	FSPL = 27.55 # de factor voor het verlies van signaalsterkte
+	FSPL = 27.55
 
 	m = round(10**((FSPL-(20*log10(MHz))-dBm)/20), 2)
 
 	return m
 
-print(dBm2m())
+def get_dBm(APName):
+	import subprocess
+	subprocess.run(['sudo iwlist wlo1 scan | grep -i -B 5 {} > ./iwlist_scan.txt'.format(APName)], shell=True)
+
+	f = open('iwlist_scan.txt')
+	lines = f.readlines()
+
+	frequency = 0
+	signal = 0
+
+	for l in range(len(lines)):
+		lines[l] = lines[l].strip()
+		if 'Frequency:' in lines[l]:
+			freq = lines[l].split(':')
+			freq = freq[1].split(' ')
+			frequency = int(float(freq[0])*1000)
+
+		if 'Signal' in lines[l]:
+			sig = lines[l].split('=')
+			sig = sig[-1].split(' ')
+			signal = int(sig[0])
+
+	return frequency, signal
+
+P0 = [2,2]
+P1 = [4,9]
+P2 = [16,2]
+
+dbP0 = get_dBm('V1F4AP1')
+dbP1 = get_dBm('V1F4AP2')
+dbP2 = get_dBm('V1F4AP3')
+
+r0 = dBm2m(dbP0[0], dbP0[1])
+r1 = dBm2m(dbP1[0], dbP1[1])
+r2 = dBm2m(dbP2[0], dbP2[1])
+
+print('Access Points: ')
+print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0))
+print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1))
+print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2))
