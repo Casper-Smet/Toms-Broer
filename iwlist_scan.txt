@@ -1,6 +1,0 @@
-          Cell 01 - Address: 0A:C5:E1:B3:45:B3
-                    Channel:1
-                    Frequency:2.412 GHz (Channel 1)
-                    Quality=60/70  Signal level=-50 dBm  
-                    Encryption key:on
-                    ESSID:"V1f4ap3"
