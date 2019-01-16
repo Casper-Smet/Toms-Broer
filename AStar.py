@@ -98,7 +98,7 @@ def astar(maze, start, end):
             open_list.append(child)
 
 def matrix_reader():
-    with open(r"D:\HU Periode B\PTW\mapmatrix01v2.txt", "r") as map:
+    with open(r"../mapmatrix01v2.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
         #i = 0
