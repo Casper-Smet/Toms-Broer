@@ -50,4 +50,16 @@ def location(P0, P1, P2, r0, r1, r2):
 				if p[0][i] == p[1][0] == p[2][k]:
 					return p[0][i]
 
-print(location(P0, P1, P2, r0, r1, r2))
+def dBm2m():
+	from math import log10
+
+	MHz = int(input('WiFi Frequency in MHz (2412, 5180, ...): '))
+	dBm = int(input('Detected signal strength in dBm (-53, -78, ...): '))
+
+	FSPL = 27.55 # de factor voor het verlies van signaalsterkte
+
+	m = round(10**((FSPL-(20*log10(MHz))-dBm)/20), 2)
+
+	return m
+
+print(dBm2m())
