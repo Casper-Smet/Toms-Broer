@@ -107,7 +107,10 @@ def matrix_reader():
             #print(i)
             #addition = [e for e in row if e]
             #print(addition)
-            matrix.append(list(row))
+            new_row = list()
+            for x in row:
+                new_row.append(int(x))
+            matrix.append(list(new_row))
     better = [e for e in matrix if e]
 
     return(better)
@@ -130,7 +133,7 @@ def main():
         """
     maze = matrix_reader()
     start = (0, 0)
-    end = (6, 6)
+    end = (2, 29)
 
     path = astar(maze, start, end)
     print(path)
