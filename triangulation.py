@@ -1,16 +1,16 @@
-import math
-
 def cc_intersection(P0, P1, r0, r1):
+
+	from math import sqrt
 
 	P2 = [None,None]
 	P3_1 = [None,None]
 	P3_2 = [None,None]
 
-	d = math.sqrt((P0[0]-P1[0])**2+(P0[1]-P1[1])**2)
+	d = sqrt((P0[0]-P1[0])**2+(P0[1]-P1[1])**2)
 
 	a = (r0**2-r1**2+d**2)/(2*d)
 
-	h = math.sqrt(r0**2-a**2)
+	h = sqrt(r0**2-a**2)
 
 	P2[0] = P0[0]+a*(P1[0]-P0[0])/d
 	P2[1] = P0[1]+a*(P1[1]-P0[1])/d
@@ -52,7 +52,9 @@ def dBm2m(MHz, dBm):
 	return m
 
 def get_dBm(APName):
+
 	import subprocess
+
 	subprocess.run(['sudo iwlist wlo1 scan | grep -i -B 5 {} > ./iwlist_scan.txt'.format(APName)], shell=True)
 
 	f = open('iwlist_scan.txt')
@@ -75,19 +77,67 @@ def get_dBm(APName):
 
 	return frequency, signal
 
-P0 = [2,2]
-P1 = [4,9]
-P2 = [16,2]
+def menu():
 
-dbP0 = get_dBm('V1F4AP1')
-dbP1 = get_dBm('V1F4AP2')
-dbP2 = get_dBm('V1F4AP3')
+	from termcolor import colored
 
-r0 = dBm2m(dbP0[0], dbP0[1])
-r1 = dBm2m(dbP1[0], dbP1[1])
-r2 = dBm2m(dbP2[0], dbP2[1])
+	P0 = [None,None]
+	P1 = [None,None]
+	P2 = [None,None]
 
-print('Access Points: ')
-print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0))
-print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1))
-print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2))
+	AP0 = ''
+	AP1 = ''
+	AP2 = ''
+
+	class AccessPointError(Exception):
+		pass
+
+	print('\u001b[1mThis applet will attempt to triangulate your position based on WiFi Access Points\u001b[0m')
+
+	def get_apNames():
+		print('Please enter the names for the three Access Points')
+		AP0 = input('Access Point 1: ')
+		AP1 = input('Access Point 2: ')
+		AP2 = input('Access Point 3: ')
+		get_apCoords()
+
+	def get_apCoords():
+		print('\u001b[1mNow you need to enter the coordinates for the AP\'s based on how many meters they are from you\u001b[0m')
+		print('\u001b[1mRequired format: [x,y]\u001b[0m')
+		try:
+			P0 = eval(input('Access Point 1: '))
+			P1 = eval(input('Access Point 2: '))
+			P2 = eval(input('Access Point 3: '))
+			if P0 == P1 or P1 == P2 or P2 == P0:
+				raise AccessPointError
+			if (type(P0) or type(P1) or type(P2)) is not (list or tuple):
+				raise NameError
+			else:
+				dbP0 = get_dBm(AP0)
+				dbP1 = get_dBm(AP1)
+				dbP2 = get_dBm(AP2)
+
+				r0 = dBm2m(dbP0[0], dbP0[1])
+				r1 = dBm2m(dbP1[0], dbP1[1])
+				r2 = dBm2m(dbP2[0], dbP2[1])
+
+				print('Access Points: ')
+				print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0))
+				print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1))
+				print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2))
+
+		except NameError:
+			print(colored('Wrong format', 'red'))
+			get_apCoords()
+
+		except ValueError:
+			print(colored('Something went wrong, please re-enter the AP Data', 'red'))
+			get_apNames()
+
+		except AccessPointError:
+			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
+			get_apCoords()
+
+	get_apNames()
+
+menu()
