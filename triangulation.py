@@ -1,6 +1,6 @@
 def cc_intersection(P0, P1, r0, r1):
 
-	from math import sqrt
+	from math import sqrt, fabs
 
 	P2 = [None,None]
 	P3_1 = [None,None]
@@ -10,7 +10,7 @@ def cc_intersection(P0, P1, r0, r1):
 
 	a = (r0**2-r1**2+d**2)/(2*d)
 
-	h = sqrt(r0**2-a**2)
+	h = sqrt(fabs(pow(r0,2)-pow(a,2)))
 
 	P2[0] = P0[0]+a*(P1[0]-P0[0])/d
 	P2[1] = P0[1]+a*(P1[1]-P0[1])/d
@@ -39,8 +39,10 @@ def location(P0, P1, P2, r0, r1, r2):
 	for i in range(2):
 		for j in range(2):
 			for k in range(2):
-				if p[0][i] == p[1][0] == p[2][k]:
+				if p[0][i] == p[1][j] == p[2][k]:
 					return p[0][i]
+				else:
+					return ['?','?']
 
 def dBm2m(MHz, dBm):
 	from math import log10
@@ -59,6 +61,7 @@ def get_dBm(APName):
 
 	f = open('iwlist_scan.txt')
 	lines = f.readlines()
+	f.close()
 
 	frequency = 0
 	signal = 0
@@ -81,13 +84,13 @@ def menu():
 
 	from termcolor import colored
 
-	P0 = [None,None]
-	P1 = [None,None]
-	P2 = [None,None]
+	P0 = [1,1]
+	P1 = [4,1]
+	P2 = [4,3]
 
-	AP0 = ''
-	AP1 = ''
-	AP2 = ''
+	AP0 = 'v1f4ap1'
+	AP1 = 'v1f4ap3'
+	AP2 = 'win-5b'
 
 	class AccessPointError(Exception):
 		pass
@@ -95,24 +98,28 @@ def menu():
 	print('\u001b[1mThis applet will attempt to triangulate your position based on WiFi Access Points\u001b[0m')
 
 	def get_apNames():
-		print('Please enter the names for the three Access Points')
-		AP0 = input('Access Point 1: ')
-		AP1 = input('Access Point 2: ')
-		AP2 = input('Access Point 3: ')
+		nonlocal AP0, AP1, AP2
+		# print('Please enter the names for the three Access Points')
+		# AP0 = input('Access Point 1: ')
+		# AP1 = input('Access Point 2: ')
+		# AP2 = input('Access Point 3: ')
 		get_apCoords()
 
 	def get_apCoords():
-		print('\u001b[1mNow you need to enter the coordinates for the AP\'s based on how many meters they are from you\u001b[0m')
-		print('\u001b[1mRequired format: [x,y]\u001b[0m')
+		nonlocal AP0, AP1, AP2, P0, P1, P2
+		# print('\u001b[1mNow you need to enter the coordinates for the AP\'s based on how many meters they are from you\u001b[0m')
+		# print('\u001b[1mRequired format: [x,y]\u001b[0m')
 		try:
-			P0 = eval(input('Access Point 1: '))
-			P1 = eval(input('Access Point 2: '))
-			P2 = eval(input('Access Point 3: '))
+			# P0 = eval(input('Access Point 1: '))
+			# P1 = eval(input('Access Point 2: '))
+			# P2 = eval(input('Access Point 3: '))
+
 			if P0 == P1 or P1 == P2 or P2 == P0:
 				raise AccessPointError
-			if (type(P0) or type(P1) or type(P2)) is not (list or tuple):
-				raise NameError
+			# if (type(P0) or type(P1) or type(P2)) is not (list or tuple):
+			# 	raise NameError
 			else:
+
 				dbP0 = get_dBm(AP0)
 				dbP1 = get_dBm(AP1)
 				dbP2 = get_dBm(AP2)
@@ -121,18 +128,26 @@ def menu():
 				r1 = dBm2m(dbP1[0], dbP1[1])
 				r2 = dBm2m(dbP2[0], dbP2[1])
 
+				r0 = round(r0, 2)
+				r1 = round(r1, 2)
+				r2 = round(r2, 2)
+
 				print('Access Points: ')
 				print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0))
 				print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1))
 				print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2))
 
+				l = location(P0, P1, P2, r0, r1, r2)
+				print('You are at: {}'.format(l))
+
 		except NameError:
 			print(colored('Wrong format', 'red'))
 			get_apCoords()
 
-		except ValueError:
-			print(colored('Something went wrong, please re-enter the AP Data', 'red'))
-			get_apNames()
+		# except ValueError as e:
+		# 	print(colored(e, 'red'))
+		# 	print(colored('Something went wrong, please re-enter the AP Data', 'red'))
+		# 	get_apNames()
 
 		except AccessPointError:
 			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
