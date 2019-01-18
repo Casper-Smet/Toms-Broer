@@ -96,9 +96,12 @@ def astar(maze, start, end):
 
             # Add the child to the open list
             open_list.append(child)
+            print(open_list)
+            print(closed_list)
+
 
 def matrix_reader():
-    with open(r"maps/mapmatrix01v2.txt", "r") as map:
+    with open(r"maps/mapmatrix02v3.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
         #i = 0
@@ -132,8 +135,9 @@ def main():
         end = (7, 6)
         """
     maze = matrix_reader()
-    start = (0, 0)
-    end = (2, 29)
+    start = (6, 16)
+    end = (9, 8)
+    choke_points = [(6,16), (4,10), (4,6), (6,6)]
 
     path = astar(maze, start, end)
     print(path)
