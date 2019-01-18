@@ -1,5 +1,6 @@
 import csv as c
 
+
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -96,8 +97,7 @@ def astar(maze, start, end):
 
             # Add the child to the open list
             open_list.append(child)
-            print(open_list)
-            print(closed_list)
+
 
 
 def matrix_reader():
@@ -118,7 +118,8 @@ def matrix_reader():
 
     return(better)
 
-def main():
+
+def dmain(start,end):
     """
        maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
@@ -135,13 +136,13 @@ def main():
         end = (7, 6)
         """
     maze = matrix_reader()
-    start = (6, 16)
+    """start = (6, 16)
     end = (9, 8)
-    choke_points = [(6,16), (4,10), (4,6), (6,6)]
+    choke_points = [(6,16), (4,10), (4,6), (6,6)]"""
 
     path = astar(maze, start, end)
     print(path)
 
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+#    main()

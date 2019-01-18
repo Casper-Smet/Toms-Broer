@@ -9,6 +9,25 @@
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
 import pygame
+import csv as c
+from AStar import *
+def matrix_reader():
+    with open(r"maps/mapmatrix02v3.txt", "r") as map:
+        reader = c.reader(map)
+        matrix = list()
+        i = 0
+        for row in reader:
+            i += 1
+            new_row = list()
+            for x in row:
+                new_row.append(int(x))
+            #print(i)
+            #addition = [e for e in row if e]
+            #print(addition)
+            matrix.append(list(new_row))
+    better = [e for e in matrix if e]
+    #print(better[15][80])
+    return(better)
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -25,23 +44,23 @@ MARGIN = 5
 
 # Create a 2 dimensional array. A two dimensional
 # array is simply a list of lists.
-grid = []
-for row in range(10):
+grid = matrix_reader()
+"""for row in range(10):
     # Add an empty array that will hold each cell
     # in this row
     grid.append([])
     for column in range(10):
-        grid[row].append(0)  # Append a cell
+        grid[row].append(0)  # Append a cell"""
 
 # Set row 1, cell 5 to one. (Remember rows and
 # column numbers start at zero.)
-grid[1][5] = 1
+#grid[1][5] = 1
 
 # Initialize pygame
 pygame.init()
 
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [255, 255]
+WINDOW_SIZE = [630, 332]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # Set title of screen
@@ -52,6 +71,8 @@ done = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
+#Initialize start and end_node
+start = end = tuple()
 
 # -------- Main Program Loop -----------
 while not done:
@@ -64,19 +85,26 @@ while not done:
             # Change the x/y screen coordinates to grid coordinates
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
+            if not start:
+                start = (row, column)
+            else:
+                end = (row, column)
             # Set that location to one
             grid[row][column] = 1
             print("Click ", pos, "Grid coordinates: ", row, column)
+    if start and end:
+        dmain(start,end)
+        break
 
     # Set the screen background
     screen.fill(BLACK)
 
     # Draw the grid
-    for row in range(10):
-        for column in range(10):
+    for row in range(13):
+        for column in range(25):
             color = WHITE
             if grid[row][column] == 1:
-                color = GREEN
+                color = RED
             pygame.draw.rect(screen,
                              color,
                              [(MARGIN + WIDTH) * column + MARGIN,
