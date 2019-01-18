@@ -99,17 +99,11 @@ def astar(maze, start, end):
             open_list.append(child)
 
 
-
 def matrix_reader():
     with open(r"maps/mapmatrix02v3.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
-        #i = 0
         for row in reader:
-            #i += 1
-            #print(i)
-            #addition = [e for e in row if e]
-            #print(addition)
             new_row = list()
             for x in row:
                 new_row.append(int(x))
@@ -142,6 +136,7 @@ def dmain(start,end):
 
     path = astar(maze, start, end)
     print(path)
+    return path
 
 
 #if __name__ == '__main__':
