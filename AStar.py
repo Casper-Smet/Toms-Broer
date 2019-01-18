@@ -16,8 +16,11 @@ class Node():
         return self.position == other.position
 
 
-def astar(maze, start, end):
+def astar(maze, start, end, compartment, endstored):
     """Returns a list of tuples as a path from the given start to the given end in the given maze"""
+
+    # Initialize path
+    path = []
 
     # Create start and end node
     start_node = Node(None, start)
@@ -49,12 +52,16 @@ def astar(maze, start, end):
 
         # Found the goal
         if current_node == end_node:
-            path = []
+
             current = current_node
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-            return path[::-1] # Return reversed path
+            if compartment == 1:
+                end = endstored
+                path1 = astar(maze, (6, 15), end, 0, endstored)
+                path = path1 + path
+            return path # Return reversed path
 
         # Generate children
         children = []
@@ -91,6 +98,7 @@ def astar(maze, start, end):
             child.f = child.g + child.h
 
             # Child is already in the open list
+            # print(child.position)
             for open_node in open_list:
                 if child == open_node and child.g > open_node.g:
                     continue
@@ -114,30 +122,17 @@ def matrix_reader():
 
 
 def dmain(start,end):
-    """
-       maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-        start = (0, 0)
-        end = (7, 6)
-        """
+    compartment = int()
     maze = matrix_reader()
-    """start = (6, 16)
-    end = (9, 8)
-    choke_points = [(6,16), (4,10), (4,6), (6,6)]"""
 
-    path = astar(maze, start, end)
+    for i in range(7,12):
+        for j in range(6, 13):
+            if end == (j, i):
+                compartment = 1
+
+    path = astar(maze, start, (6,15), compartment, end) # KIJK HIER NAAR !!! (6, 15)
     print(path)
     return path
-
 
 #if __name__ == '__main__':
 #    main()
