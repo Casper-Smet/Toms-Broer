@@ -23,6 +23,27 @@ def cc_intersection(P0, P1, r0, r1):
 
 	return P3_1, P3_2
 
+def calc_center(p):
+	# lines are sets of two coordinates through which the line travels
+	# eg. l1 = [[1,3],[4,6]]
+	l1 = p[0]
+	l2 = p[1]
+	xdiff = (l1[0][0]-l1[1][0], l2[0][0]-l2[1][0])
+	ydiff = (l1[0][1]-l1[1][1], l2[0][1]-l2[1][1])
+
+	def det(a, b):
+		return a[0]*b[1]-a[1]*b[0]
+
+	div = det(xdiff, ydiff)
+	if div == 0:
+		raise Exception('Lines don\'t intersect')
+
+	d = (det(*l1), det(*l2))
+	x = det(d, xdiff)/div
+	y = det(d, ydiff)/div
+
+	return x, y
+
 def location(P0, P1, P2, r0, r1, r2):
 
 	p0 = cc_intersection(P0, P1, r0, r1)
@@ -42,7 +63,7 @@ def location(P0, P1, P2, r0, r1, r2):
 				if p[0][i] == p[1][j] == p[2][k]:
 					return p[0][i]
 				else:
-					return ['?','?']
+					return calc_center(p)
 
 def dBm2m(MHz, dBm):
 	from math import log10
@@ -84,13 +105,13 @@ def menu():
 
 	from termcolor import colored
 
-	P0 = [1,1]
-	P1 = [4,1]
-	P2 = [4,3]
+	P0 = [0,0]
+	P1 = [2,0]
+	P2 = [1,2]
 
-	AP0 = 'v1f4ap1'
-	AP1 = 'v1f4ap3'
-	AP2 = 'win-5b'
+	AP0 = 'internet'
+	AP1 = 'win-5b'
+	AP2 = 'v1f4ap3'
 
 	class AccessPointError(Exception):
 		pass

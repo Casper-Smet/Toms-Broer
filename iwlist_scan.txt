@@ -1,6 +1,0 @@
-          Cell 02 - Address: 46:03:2C:C7:E5:52
-                    Channel:1
-                    Frequency:2.412 GHz (Channel 1)
-                    Quality=62/70  Signal level=-48 dBm  
-                    Encryption key:on
-                    ESSID:"WIN-5BFAIA19639 6365"
