@@ -1,24 +1,16 @@
-import math
-
-P0 = [2,2]
-P1 = [4,9]
-P2 = [16,2]
-
-r0 = math.sqrt(37)
-r1 = math.sqrt(52)
-r2 = math.sqrt(65)
-
 def cc_intersection(P0, P1, r0, r1):
+
+	from math import sqrt, fabs
 
 	P2 = [None,None]
 	P3_1 = [None,None]
 	P3_2 = [None,None]
 
-	d = math.sqrt((P0[0]-P1[0])**2+(P0[1]-P1[1])**2)
+	d = sqrt((P0[0]-P1[0])**2+(P0[1]-P1[1])**2)
 
 	a = (r0**2-r1**2+d**2)/(2*d)
 
-	h = math.sqrt(r0**2-a**2)
+	h = sqrt(fabs(pow(r0,2)-pow(a,2)))
 
 	P2[0] = P0[0]+a*(P1[0]-P0[0])/d
 	P2[1] = P0[1]+a*(P1[1]-P0[1])/d
@@ -47,19 +39,120 @@ def location(P0, P1, P2, r0, r1, r2):
 	for i in range(2):
 		for j in range(2):
 			for k in range(2):
-				if p[0][i] == p[1][0] == p[2][k]:
+				if p[0][i] == p[1][j] == p[2][k]:
 					return p[0][i]
+				else:
+					return ['?','?']
 
-def dBm2m():
+def dBm2m(MHz, dBm):
 	from math import log10
 
-	MHz = int(input('WiFi Frequency in MHz (2412, 5180, ...): '))
-	dBm = int(input('Detected signal strength in dBm (-53, -78, ...): '))
-
-	FSPL = 27.55 # de factor voor het verlies van signaalsterkte
+	FSPL = 27.55
 
 	m = round(10**((FSPL-(20*log10(MHz))-dBm)/20), 2)
 
 	return m
 
-print(dBm2m())
+def get_dBm(APName):
+
+	import subprocess
+
+	subprocess.run(['sudo iwlist wlo1 scan | grep -i -B 5 {} > ./iwlist_scan.txt'.format(APName)], shell=True)
+
+	f = open('iwlist_scan.txt')
+	lines = f.readlines()
+	f.close()
+
+	frequency = 0
+	signal = 0
+
+	for l in range(len(lines)):
+		lines[l] = lines[l].strip()
+		if 'Frequency:' in lines[l]:
+			freq = lines[l].split(':')
+			freq = freq[1].split(' ')
+			frequency = int(float(freq[0])*1000)
+
+		if 'Signal' in lines[l]:
+			sig = lines[l].split('=')
+			sig = sig[-1].split(' ')
+			signal = int(sig[0])
+
+	return frequency, signal
+
+def menu():
+
+	from termcolor import colored
+
+	P0 = [1,1]
+	P1 = [4,1]
+	P2 = [4,3]
+
+	AP0 = 'v1f4ap1'
+	AP1 = 'v1f4ap3'
+	AP2 = 'win-5b'
+
+	class AccessPointError(Exception):
+		pass
+
+	print('\u001b[1mThis applet will attempt to triangulate your position based on WiFi Access Points\u001b[0m')
+
+	def get_apNames():
+		nonlocal AP0, AP1, AP2
+		# print('Please enter the names for the three Access Points')
+		# AP0 = input('Access Point 1: ')
+		# AP1 = input('Access Point 2: ')
+		# AP2 = input('Access Point 3: ')
+		get_apCoords()
+
+	def get_apCoords():
+		nonlocal AP0, AP1, AP2, P0, P1, P2
+		# print('\u001b[1mNow you need to enter the coordinates for the AP\'s based on how many meters they are from you\u001b[0m')
+		# print('\u001b[1mRequired format: [x,y]\u001b[0m')
+		try:
+			# P0 = eval(input('Access Point 1: '))
+			# P1 = eval(input('Access Point 2: '))
+			# P2 = eval(input('Access Point 3: '))
+
+			if P0 == P1 or P1 == P2 or P2 == P0:
+				raise AccessPointError
+			# if (type(P0) or type(P1) or type(P2)) is not (list or tuple):
+			# 	raise NameError
+			else:
+
+				dbP0 = get_dBm(AP0)
+				dbP1 = get_dBm(AP1)
+				dbP2 = get_dBm(AP2)
+
+				r0 = dBm2m(dbP0[0], dbP0[1])
+				r1 = dBm2m(dbP1[0], dbP1[1])
+				r2 = dBm2m(dbP2[0], dbP2[1])
+
+				r0 = round(r0, 2)
+				r1 = round(r1, 2)
+				r2 = round(r2, 2)
+
+				print('Access Points: ')
+				print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0))
+				print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1))
+				print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2))
+
+				l = location(P0, P1, P2, r0, r1, r2)
+				print('You are at: {}'.format(l))
+
+		except NameError:
+			print(colored('Wrong format', 'red'))
+			get_apCoords()
+
+		# except ValueError as e:
+		# 	print(colored(e, 'red'))
+		# 	print(colored('Something went wrong, please re-enter the AP Data', 'red'))
+		# 	get_apNames()
+
+		except AccessPointError:
+			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
+			get_apCoords()
+
+	get_apNames()
+
+menu()
