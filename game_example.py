@@ -11,6 +11,8 @@
 import pygame
 import csv as c
 from AStar import *
+
+
 def matrix_reader():
     with open(r"maps/mapmatrix02v3.txt", "r") as map:
         reader = c.reader(map)
@@ -34,6 +36,8 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+PURPLE = (55, 29, 124)
 
 # This sets the WIDTH and HEIGHT of each grid location
 WIDTH = 20
@@ -86,15 +90,22 @@ while not done:
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
             if not start:
+                grid[row][column] = 2
                 start = (row, column)
-            else:
+            elif not end:
                 end = (row, column)
+                grid[row][column] = 3
+                path = dmain(start, end)
+                for x in range(1,len(path)-1):
+                    column = path[x][1]
+                    row = path[x][0]
+                    grid[row][column] = 4
             # Set that location to one
-            grid[row][column] = 1
             print("Click ", pos, "Grid coordinates: ", row, column)
-    if start and end:
-        dmain(start,end)
-        break
+        #if start and end and event.type == pygame.MOUSEBUTTONDOWN:
+         #   dmain(start,end)
+
+            # break
 
     # Set the screen background
     screen.fill(BLACK)
@@ -105,12 +116,17 @@ while not done:
             color = WHITE
             if grid[row][column] == 1:
                 color = RED
+            if grid[row][column] == 2:
+                color = GREEN
+            if grid[row][column] == 3:
+                color = PURPLE
+            if grid[row][column] == 4:
+                color = BLUE
             pygame.draw.rect(screen,
                              color,
                              [(MARGIN + WIDTH) * column + MARGIN,
-                              (MARGIN + HEIGHT) * row + MARGIN,
-                              WIDTH,
-                              HEIGHT])
+                              (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
+
 
     # Limit to 60 frames per second
     clock.tick(60)
