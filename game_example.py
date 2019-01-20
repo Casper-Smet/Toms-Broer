@@ -9,7 +9,6 @@
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
 import pygame
-import csv as c
 from AStar import *
 
 
@@ -64,7 +63,7 @@ grid = matrix_reader()
 pygame.init()
 
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [630, 332]
+WINDOW_SIZE = [630, 331]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # Set title of screen
