@@ -137,7 +137,7 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
                 if startcompartment == 3 or startcompartment == 4:
                     startcompartment = 0
                     end = endstored
-                    path1 = astar(maze, (4, 9), end, 0, endstored, startcompartment)
+                    path1 = astar(maze, (4, 15), end, 0, endstored, startcompartment)
                     path = path1 + path
 
 
@@ -296,7 +296,7 @@ def dmain(start, end):
 
     if compartment == 7:
         if startcompartment == 3 or startcompartment == 4:
-            endfirst = (4, 9)
+            endfirst = (4, 15)
 
     path = astar(maze, start, endfirst, compartment, end, startcompartment)
 
