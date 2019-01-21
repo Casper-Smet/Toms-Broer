@@ -211,7 +211,7 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
 
 
 def matrix_reader():
-    with open(r"maps/mapmatrix02v3.txt", "r") as map:
+    with open(r"maps/mapmatrix04v3.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
         for row in reader:
