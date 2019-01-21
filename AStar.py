@@ -108,20 +108,15 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
             if compartment == 4:
                 if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
                     startcompartment = 0
-                    path1 = astar(maze, (5, 18), (4, 9), 0, endstored, startcompartment)
+                    path1 = astar(maze, (5, 18), (4, 10), 0, endstored, startcompartment)
                     path = path1 + path
                     end = endstored
-                    path1 = astar(maze, (4, 9), end, 0, endstored, startcompartment)
+                    path1 = astar(maze, (4, 10), end, 0, endstored, startcompartment)
                     path = path1 + path
                 if startcompartment == 3:
                     startcompartment = 0
                     end = endstored
                     path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 5 or startcompartment == 7:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (4, 9), end, 0, endstored, startcompartment)
                     path = path1 + path
 
             if compartment == 5:
@@ -150,6 +145,24 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
                     path1 = astar(maze, (4, 15), end, 0, endstored, startcompartment)
                     path = path1 + path
 
+            if compartment == 8:
+                if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
+                    startcompartment = 0
+                    path1 = astar(maze, (5, 18), (2, 9), 0, endstored, startcompartment)
+                    path = path1 + path
+                    end = endstored
+                    path1 = astar(maze, (2, 9), end, 0, endstored, startcompartment)
+                    path = path1 + path
+                if startcompartment == 5 or startcompartment == 7:
+                    startcompartment = 0
+                    end = endstored
+                    path1 = astar(maze, (2, 9), end, 0, endstored, startcompartment)
+                    path = path1 + path
+                if startcompartment == 3:
+                    startcompartment = 0
+                    end = endstored
+                    path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
+                    path = path1 + path
 
             return path  # Return path
 
@@ -239,7 +252,7 @@ def dmain(start, end):
                 startcompartment = 3
 
     for i in range(2, 10):
-        for j in range(0, 5):
+        for j in range(2, 5):
             if end == (j, i):
                 compartment = 4  # Upper Middle
             if start == (j, i):
@@ -266,6 +279,13 @@ def dmain(start, end):
             if start == (j, i):
                 startcompartment = 7
 
+    for i in range(2, 10):
+        for j in range(0, 2):
+            if end == (j, i):
+                compartment = 8  # Upper Upper Middle
+            if start == (j, i):
+                startcompartment = 8
+
     if compartment == 1:  # Checks whether it should get passed a choke point or not for all routes
         if startcompartment == 3 or startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
             endfirst = (5, 18)
@@ -291,8 +311,6 @@ def dmain(start, end):
             endfirst = (5, 18)
         if startcompartment == 3:
             endfirst = (4, 2)
-        if startcompartment == 5 or startcompartment == 7:
-            endfirst = (4, 9)
 
     if compartment == 5:
         if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
@@ -307,6 +325,14 @@ def dmain(start, end):
     if compartment == 7:
         if startcompartment == 3 or startcompartment == 4:
             endfirst = (4, 15)
+
+    if compartment == 8:
+        if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
+            endfirst = (5, 18)
+        if startcompartment == 5 or startcompartment == 7:
+            endfirst = (2 ,9)
+        if startcompartment == 3:
+            endfirst = (4, 2)
 
     path = astar(maze, start, endfirst, compartment, end, startcompartment)
 
