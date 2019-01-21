@@ -39,8 +39,8 @@ BLUE = (0, 0, 255)
 PURPLE = (55, 29, 124)
 
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 20
-HEIGHT = 20
+WIDTH = 13
+HEIGHT = 33
 
 # This sets the margin between each cell
 MARGIN = 5
@@ -63,7 +63,7 @@ grid = matrix_reader()
 pygame.init()
 
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [630, 331]
+WINDOW_SIZE = [630, 650]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # Set title of screen
