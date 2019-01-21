@@ -1,8 +1,19 @@
-from appJar import gui
+from tkinter import *
 
-app = gui()
+window = Tk()
+window.title("Tom's Broer")
+window.geometry('1280x720')
+window.config(bg="#303135")
 
-app.addLabel('Title', "Welcome to Tom's Broer")
-app.setLabelBg('Title', 'Blue')
+txt = Entry(window, width=75)
+txt.pack(padx = 1, pady = 200)
 
-app.go()
+def pushed():
+    lbl = Label(window, text = 'Hello')
+    lbl.pack()
+    lbl.configure(text="Searched!")
+
+btn = Button(window, text= "Search", command=pushed)
+btn.pack(padx = 1, pady = 1)
+
+window.mainloop()
