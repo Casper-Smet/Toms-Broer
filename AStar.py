@@ -113,6 +113,16 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
                     end = endstored
                     path1 = astar(maze, (4, 9), end, 0, endstored, startcompartment)
                     path = path1 + path
+                if startcompartment == 3:
+                    startcompartment = 0
+                    end = endstored
+                    path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
+                    path = path1 + path
+                if startcompartment == 5 or startcompartment == 7:
+                    startcompartment = 0
+                    end = endstored
+                    path1 = astar(maze, (4, 9), end, 0, endstored, startcompartment)
+                    path = path1 + path
 
             if compartment == 5:
                 if startcompartment == 6 or startcompartment == 1 or startcompartment == 2:
