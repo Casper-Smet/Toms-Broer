@@ -1,8 +1,15 @@
 import pygame
 from AStar import *
 
+class Background(pygame.sprite.Sprite):
+    def __init__(self, image_file, location):
+        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = location
 
-def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH):
+
+def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH, BackGround):
     # Define some colors
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
@@ -12,11 +19,12 @@ def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH):
     PURPLE = (55, 29, 124)
 
     # Set the screen background
-    screen.fill(BLACK)
+    screen.fill(WHITE)
+    screen.blit(BackGround.image, BackGround.rect)
 
     # Draw the grid
-    for row in range(13):
-        for column in range(25):
+    for row in range(len(grid)):
+        for column in range(len(grid[0])):
             color = WHITE
             if grid[row][column] == 1:
                 color = RED
@@ -26,21 +34,24 @@ def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH):
                 color = PURPLE
             if grid[row][column] == 4:
                 color = BLUE
-            pygame.draw.rect(screen,
-                             color,
-                             [(MARGIN + WIDTH) * column + MARGIN,
-                              (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
+
+            if color != WHITE:
+                pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
+
 
 
 def game_main():
 
+    BackGround = Background("maps/background-blueprintv3.png", [0, 0])
 
     # This sets the WIDTH and HEIGHT of each grid location
-    WIDTH = 13
-    HEIGHT = 33
+    #WIDTH = 13
+    #HEIGHT = 33
+    HEIGHT = WIDTH = 25 #Needs adjusting
+
 
     # This sets the margin between each cell
-    MARGIN = 5
+    MARGIN = 0
 
     # Create a 2 dimensional array based on binary map.
     grid = matrix_reader()
@@ -49,7 +60,7 @@ def game_main():
     pygame.init()
 
     # Set the HEIGHT and WIDTH of the screen
-    WINDOW_SIZE = [455, 500]
+    WINDOW_SIZE = [499, 550]
     screen = pygame.display.set_mode(WINDOW_SIZE)
 
     # Set title of screen
@@ -76,36 +87,37 @@ def game_main():
                 row = pos[1] // (HEIGHT + MARGIN)
 
                 # Check if clicked space is first click.
-                if not start:
-                    # assign colour to space
-                    grid[row][column] = 2
+                if grid[row][column] != 1:
+                    if not start:
+                       # assign colour to space
+                        grid[row][column] = 2
 
-                    # Assign coördinates of click to start variable.
-                    start = (row, column)
+                      # Assign coördinates of click to start variable.
+                        start = (row, column)
 
-                # Check if clicked space is second click.
-                elif not end:
+                    # Check if clicked space is second click.
+                    elif not end:
 
-                    # Assign colour to space.
-                    grid[row][column] = 3
+                        # Assign colour to space.
+                        grid[row][column] = 3
 
-                    # Assign coördinates of click to end variable.
-                    end = (row, column)
+                        # Assign coördinates of click to end variable.
+                        end = (row, column)
 
-                    # Start A* pathfinding with given coördinates. Return results to path variable.
-                    path = dmain(start, end)
+                        # Start A* pathfinding with given coördinates. Return results to path variable.
+                        path = dmain(start, end)
 
-                    # Sets all coördinates in path to colour.
-                    for x in range(1, len(path) - 1):
-                        column = path[x][1]
-                        row = path[x][0]
-                        grid[row][column] = 4
-                # Print clicked coördinates (debug)
-                print("Click ", pos, "Grid coordinates: ", row, column)
+                        # Sets all coördinates in path to colour.
+                        for x in range(1, len(path) - 1):
+                            column = path[x][1]
+                            row = path[x][0]
+                            grid[row][column] = 4
+                    # Print clicked coördinates (debug)
+                    print("Click ", pos, "Grid coordinates: ", row, column)
 
 
         # Draw the grid.
-        grid_draw(grid,screen, MARGIN, HEIGHT, WIDTH)
+        grid_draw(grid,screen, MARGIN, HEIGHT, WIDTH, BackGround)
 
         # Limit to 60 frames per second
         clock.tick(60)

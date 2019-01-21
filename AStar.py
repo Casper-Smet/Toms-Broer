@@ -221,7 +221,7 @@ def matrix_reader():
             matrix.append(list(new_row))
     better = [e for e in matrix if e]
 
-    return(better)
+    return better
 
 
 def dmain(start, end):
