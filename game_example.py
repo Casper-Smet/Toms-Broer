@@ -1,5 +1,8 @@
 import pygame
 from AStar import *
+from tkinter import *
+import os
+import platform
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
@@ -26,8 +29,8 @@ def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH, BackGround):
     for row in range(len(grid)):
         for column in range(len(grid[0])):
             color = WHITE
-            if grid[row][column] == 1:
-                color = RED
+            #if grid[row][column] == 1:
+                #color = RED
             if grid[row][column] == 2:
                 color = GREEN
             if grid[row][column] == 3:
@@ -76,6 +79,8 @@ def game_main():
 
     # -------- Main Program Loop -----------
     while not done:
+        #updates TKinter GUI
+        root.update()
         for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
@@ -125,7 +130,26 @@ def game_main():
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
 
-game_main()
+
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
+root = Tk()
+root.title("Tom's Broer")
+root.geometry('1280x720')
+embed = Frame(root, width=499, height=550)
+embed.grid(row=0, column=0, sticky=S)
+txt = Entry(root, width=75)
+txt.grid(row = 0, column = 200)
+root.update()
+
+# def pushed():
+#     lbl = Label(root, text = 'Hello')
+#     lbl.pack()
+#     lbl.configure(text="Searched!")
+
+if platform.system == "Windows":
+    os.environ['SDL_VIDEODRIVER'] = 'windib'
+os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
+
 pygame.quit()
+game_main()
