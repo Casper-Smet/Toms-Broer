@@ -19,12 +19,6 @@ class Node():
 def astar(maze, start, end, compartment, endstored, startcompartment):
     """Returns a list of tuples as a path from the given start to the given end in the given maze"""
 
-    print(end)
-    print(endstored)
-    print(compartment)
-    print(start)
-    print(startcompartment)
-
     # Initialize path
     path = []
 
@@ -56,8 +50,6 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
         open_list.pop(current_index)
         closed_list.append(current_node)
 
-        print(path)
-
         # Found the goal
         if current_node == end_node:
 
@@ -65,8 +57,6 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
             while current is not None:
                 path.append(current.position)
                 current = current.parent
-
-            print(path)
 
             # Choke point 1
 
@@ -201,10 +191,8 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
 
 
 def chokepoint(maze, start, end, path):
-    print(path)
     path1 = astar(maze, start, end, 0, 0, 0)
     path = path1 + path
-    print(path)
     return path
 
 
