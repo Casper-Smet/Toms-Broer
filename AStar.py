@@ -19,6 +19,12 @@ class Node():
 def astar(maze, start, end, compartment, endstored, startcompartment):
     """Returns a list of tuples as a path from the given start to the given end in the given maze"""
 
+    print(end)
+    print(endstored)
+    print(compartment)
+    print(start)
+    print(startcompartment)
+
     # Initialize path
     path = []
 
@@ -50,6 +56,8 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
         open_list.pop(current_index)
         closed_list.append(current_node)
 
+        print(path)
+
         # Found the goal
         if current_node == end_node:
 
@@ -58,113 +66,95 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
                 path.append(current.position)
                 current = current.parent
 
-            if compartment == 1:  # Makes the path go passed the choke points if necessary
-                if startcompartment == 3 or startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
-                    startcompartment = 0
-                    path1 = astar(maze, (5, 18), (6, 12), 2, endstored, startcompartment)
-                    path = path1 + path
-                    end = endstored
-                    path1 = astar(maze, (6, 12), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 2:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (6, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 6:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (6, 12), end, 0, endstored, startcompartment)
-                    path = path1 + path
+            print(path)
 
-            if compartment == 2:
-                if startcompartment == 3 or startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
-                    startcompartment = 0
-                    path1 = astar(maze, (5, 18), (6, 2), 2, endstored, startcompartment)
-                    path = path1 + path
-                    end = endstored
-                    path1 = astar(maze, (6, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 1 or startcompartment == 6:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (6, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
+            # Choke point 1
+
+            if compartment == 1:  # Makes the path go passed the choke points if necessary
+                if startcompartment in (2, 3, 4, 5, '2c', '8b'):
+                    path = chokepoint(maze, (7, 2), endstored, path)
+
+            if compartment in (2, 3, 4, 5, '2c', '8b'):
+                if startcompartment == 1:
+                    path = chokepoint(maze, (7, 2), endstored, path)
+
+            # Choke point 2
+
+            if compartment == '2c':
+                if start == (8, 11):
+                    path = chokepoint(maze, (4, 7), endstored, path)
+                elif startcompartment in (3, 5, '8b'):
+                    path = chokepoint(maze, (3, 7), endstored, path)
 
             if compartment == 3:
-                if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-                    startcompartment = 0
-                    path1 = astar(maze, (5, 18), (4, 2), 3, endstored, startcompartment)
-                    path = path1 + path
-                    end = endstored
-                    path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
+                if startcompartment == '2c':
+                    path = chokepoint(maze, (3, 7), endstored, path)
 
-            if compartment == 4:
-                if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-                    startcompartment = 0
-                    path1 = astar(maze, (5, 18), (4, 10), 0, endstored, startcompartment)
-                    path = path1 + path
-                    end = endstored
-                    path1 = astar(maze, (4, 10), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 3:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
+                # Choke point 3
 
-            if compartment == 5:
-                if startcompartment == 6 or startcompartment == 1 or startcompartment == 2:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (5, 18), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 3 or startcompartment == 4:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (4, 9), end, 0, endstored, startcompartment)
-                    path = path1 + path
+            if compartment in (2, 3, 4, '1b', '2b'):
+                if startcompartment in (6, 7, 8, '6b', '7b', '8c', '8d'):
+                    path = chokepoint(maze, (9, 14), endstored, path)
 
-            if compartment == 6:
-                if startcompartment == 1 or startcompartment == 2:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (6, 12), end, 0, endstored, startcompartment)
-                    path = path1 + path
+            if compartment in (7, '6b', '7b', '8c'):
+                if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
+                    path = chokepoint(maze, (9, 14), endstored, path)
 
-            if compartment == 7:
-                if startcompartment == 3 or startcompartment == 4:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (4, 15), end, 0, endstored, startcompartment)
-                    path = path1 + path
+            if compartment in (8, '8d'):
+                if startcompartment in (1, 2, 3, 4, '1b', '2b', '2c'):
+                    path = chokepoint(maze, (9, 14), endstored, path)
 
             if compartment == 8:
-                if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-                    startcompartment = 0
-                    path1 = astar(maze, (5, 18), (2, 9), 0, endstored, startcompartment)
-                    path = path1 + path
-                    end = endstored
-                    path1 = astar(maze, (2, 9), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 5 or startcompartment == 7:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (2, 9), end, 0, endstored, startcompartment)
-                    path = path1 + path
-                if startcompartment == 3:
-                    startcompartment = 0
-                    end = endstored
-                    path1 = astar(maze, (4, 2), end, 0, endstored, startcompartment)
-                    path = path1 + path
+                if start in ((7, 14), (6, 14), (5, 14), (4, 14), (3, 14), (2, 14), (6, 15), (5, 15), (4, 15), (3, 15),
+                             (2, 15), (5, 16), (4, 16), (3, 16), (2, 16), (4, 17), (3, 17), (2, 17), (3, 18), (2, 18),
+                             (2, 19)):
+                    path = chokepoint(maze, (9, 14), endstored, path)
 
-            return path  # Return path
+            if compartment == 1:
+                if startcompartment in (6, 7, 8, '6b', '7b', '8c', '8d'):
+                    path = doublechokepoint(maze, (9, 14), (7, 2), path, endstored)
+
+            if compartment == '2c':
+                if startcompartment in (6, 7, 8, '6b', '7b', '8c', '8d'):
+                    path = doublechokepoint(maze, (9, 14), (3, 7), path, endstored)
+
+            if compartment == 6:
+                if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
+                    path = doublechokepoint(maze, (9, 14), (11, 2), path, endstored)
+
+
+
+            # Choke point 4
+
+            if compartment == 6:
+                if startcompartment in (7, 8, '8b', '8c', '8d'):
+                    path = chokepoint(maze, (11, 2), endstored, path)
+
+            if compartment == 6:
+                if startcompartment == '7b':
+                    path = chokepoint(maze, (10, 2), endstored, path)
+
+            if compartment in (7, '8c'):
+                if startcompartment == 6:
+                    path = chokepoint(maze, (11, 2), endstored, path)
+
+            # Choke point 5
+
+            if compartment == 7:
+                if startcompartment in (8, '8b', '8d'):
+                    path = chokepoint(maze, (11, 10), endstored, path)
+
+            if compartment == 8:
+                if startcompartment in (6, 7, '6b', '7b'):
+                    path = chokepoint(maze, (11, 11), endstored, path)
+
+            if compartment == '8b':
+                if startcompartment == 6:
+                    path = chokepoint(maze, (11, 10), endstored, path)
+                if startcompartment in ('6b', '7b'):
+                    path = chokepoint(maze, (10, 10), endstored, path)
+
+            return path
 
         # Generate children
         children = []
@@ -210,6 +200,22 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
             open_list.append(child)
 
 
+def chokepoint(maze, start, end, path):
+    print(path)
+    path1 = astar(maze, start, end, 0, 0, 0)
+    path = path1 + path
+    print(path)
+    return path
+
+
+def doublechokepoint(maze, start, end, path, endstored):
+    path1 = astar(maze, start, end, 0, endstored, 0)
+    path = path1 + path
+    path2 = astar(maze, end, endstored, 0, 0, 0)
+    path = path2 + path
+    return path
+
+
 def matrix_reader():
     with open(r"maps/mapmatrix04v3.txt", "r") as map:
         reader = c.reader(map)
@@ -230,109 +236,190 @@ def dmain(start, end):
     maze = matrix_reader()
     endfirst = end
 
-    for i in range(2, 12):
-        for j in range(6, 13):
+    for i in range(0, 2):  # Upper Left
+        for j in range(0, 8):
             if end == (j, i):
-                compartment = 1  # Lower middle
+                compartment = 1
             if start == (j, i):
                 startcompartment = 1
 
-    for i in range(0, 2):
-        for j in range(6, 13):
+    if end == (8, 0) or end == (8, 1):  #  Under Upper Left
+        compartment = '1b'
+    if end == (8, 0) or end == (8, 1):
+        startcompartment = '1b'
+
+    for i in range(2, 7):  # Right of Upper Left
+        for j in range(0, 8):
             if end == (j, i):
-                compartment = 2  # Lower left
+                compartment = 2
             if start == (j, i):
                 startcompartment = 2
 
-    for i in range(0, 2):
-        for j in range(0, 5):
+    for i in range(2, 7):  # Under Right of Upper Left
+        for j in range(8, 9):
             if end == (j, i):
-                compartment = 3  # Upper left
+                compartment = '2b'
+            if start == (j, i):
+                startcompartment = '2b'
+
+    for i in range(5, 7):  # Right of Upper Left
+        for j in range(0, 4):
+            if end == (j, i):
+                compartment = '2c'
+            if start == (j, i):
+                startcompartment = '2c'
+
+    for i in range(7, 11):  # Upper Mid
+        for j in range(0, 3):
+            if end == (j, i):
+                compartment = 3
             if start == (j, i):
                 startcompartment = 3
 
-    for i in range(2, 10):
-        for j in range(2, 5):
+    for i in range(7, 11):  # Under Upper Mid
+        for j in range(3, 9):
             if end == (j, i):
-                compartment = 4  # Upper Middle
+                compartment = 4
             if start == (j, i):
                 startcompartment = 4
 
-    for i in range(10, 18):
-        for j in range(0, 6):
+    for i in range(11, 20):  # Upper Right
+        for j in range(0, 10):
             if end == (j, i):
-                compartment = 5  # Upper Right
+                compartment = 5
             if start == (j, i):
                 startcompartment = 5
 
-    for i in range(12, 25):
-        for j in range(6, 13):
+    for i in range(0, 2):  # Lower Left
+        for j in range(11, 22):
             if end == (j, i):
-                compartment = 6  # Lower Right
+                compartment = 6
             if start == (j, i):
                 startcompartment = 6
 
-    for i in range(18, 25):
-        for j in range(0, 6):
+    if end == (10, 0) or end == (10, 1):  #  Above Lower Left
+        compartment = '6b'
+    if start == (10, 0) or start == (10, 1):
+        startcompartment = '6b'
+
+    for i in range(2, 10):  # Lower Mid
+        for j in range(11, 22):
             if end == (j, i):
-                compartment = 7  # Upper Right Right
+                compartment = 7
             if start == (j, i):
                 startcompartment = 7
 
-    for i in range(2, 10):
-        for j in range(0, 2):
+    for i in range(2, 10):  # Above Lower Mid
+        for j in range(10, 11):
             if end == (j, i):
-                compartment = 8  # Upper Upper Middle
+                compartment = '7b'
+            if start == (j, i):
+                startcompartment = '7b'
+
+    for i in range(13, 20):  # Lower Right
+        for j in range(11, 22):
+            if end == (j, i):
+                compartment = 8
             if start == (j, i):
                 startcompartment = 8
 
-    if compartment == 1:  # Checks whether it should get passed a choke point or not for all routes
-        if startcompartment == 3 or startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
-            endfirst = (5, 18)
-        if startcompartment == 2:
-            endfirst = (6, 2)
-        if startcompartment == 6:
-            endfirst = (6, 12)
+    for i in range(16, 20):  # Upper Right within Lower Right
+        for j in range(10, 13):
+            if end == (j, i):
+                compartment = '8b'
+            if start == (j, i):
+                startcompartment = '8b'
 
-    if compartment == 2:
-        if startcompartment == 3 or startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
-            endfirst = (5, 18)
-        if startcompartment == 1 or startcompartment == 6:
-            endfirst = (6, 2)
+    if end == (12, 16):
+        compartment = 8
+    if start == (12, 16):
+        startcompartment = 8
+
+    for i in range(10, 13):  # Upper Right within Lower Right
+        for j in range(10, 12):
+            if end == (j, i):
+                compartment = '8c'
+            if start == (j, i):
+                startcompartment = '8c'
+
+    for i in range(13, 16):  # Lower Right
+        for j in range(10, 11):
+            if end == (j, i):
+                compartment = '8d'
+            if start == (j, i):
+                startcompartment = '8d'
+
+    # Checks if it has to pass a choke point or not for all routes
+    # Choke point 1
+
+    if compartment == 1:
+        if startcompartment in (2, 3, 4, 5, '2c', '8b'):
+            endfirst = (7, 2) # Choke point 1
+
+    if compartment in (2, 3, 4, 5, '2c', '8b'):
+        if startcompartment == 1:
+            endfirst = (7, 2)
+
+    # Choke point 2
+
+    if compartment == '2c':
+        if start == (8, 11):
+            endfirst = (4, 7)  # Special choke point 3
+        elif startcompartment in (3, 5, '8b'):
+            endfirst = (3, 7)  # Choke point 2
 
     if compartment == 3:
-        if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-            endfirst = (5, 18)
-        if startcompartment == 4 or startcompartment == 5 or startcompartment == 7:
-            endfirst = (4, 2)
+        if startcompartment == '2c':
+            endfirst = (3, 7)
 
-    if compartment == 4:
-        if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-            endfirst = (5, 18)
-        if startcompartment == 3:
-            endfirst = (4, 2)
+    # Choke point 3
 
-    if compartment == 5:
-        if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-            endfirst = (5, 18)
-        if startcompartment == 3 or startcompartment == 4:
-            endfirst = (4, 9)
+    if compartment in (1, 2, 3, 4, '1b', '2b', '2c'):
+        if startcompartment in (6, 7, 8, '6b', '7b', '8c', '8d'):
+            endfirst = (9, 14)  # Choke point 3
 
-    if compartment == 6:
-        if startcompartment == 1 or startcompartment == 2:
-            endfirst = (6, 12)
+    if compartment in (6, 7, '6b', '7b', '8c'):
+        if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
+            endfirst = (9, 14)
 
-    if compartment == 7:
-        if startcompartment == 3 or startcompartment == 4:
-            endfirst = (4, 15)
+    if compartment in (8, '8d'):
+        if startcompartment in (1, 2, 3, 4, '1b', '2b', '2c'):
+            endfirst = (9, 14)
 
     if compartment == 8:
-        if startcompartment == 1 or startcompartment == 2 or startcompartment == 6:
-            endfirst = (5, 18)
-        if startcompartment == 5 or startcompartment == 7:
-            endfirst = (2 ,9)
-        if startcompartment == 3:
-            endfirst = (4, 2)
+        if start in ((7, 14), (6, 14), (5, 14), (4, 14), (3, 14), (2, 14), (6, 15), (5, 15), (4, 15), (3, 15), (2, 15),
+                     (5, 16), (4, 16), (3, 16), (2, 16), (4, 17), (3, 17), (2, 17), (3, 18), (2, 18), (2, 19)):
+            endfirst = (9, 14)
+
+    # Choke point 4
+
+    if compartment == 6:
+        if startcompartment in (7, 8, '8b', '8c', '8d'):
+            endfirst = (11, 2)  # Choke point 4
+
+    if compartment == 6:
+        if startcompartment == '7b':
+            endfirst = (10, 2)  # Special choke point 1
+
+    if compartment in (7, '8c'):
+        if startcompartment == 6:
+            endfirst = (11, 2)
+
+    # Choke point 5
+
+    if compartment == 7:
+        if startcompartment in (8, '8b', '8d'):
+            endfirst = (11, 10)  # Choke point 5
+
+    if compartment == 8:
+        if startcompartment in (6, 7, '6b', '7b'):
+            endfirst = (11, 11)
+
+    if compartment == '8b':
+        if startcompartment == 6:
+            endfirst = (11, 10)
+        if startcompartment in ('6b', '7b'):
+            endfirst = (10, 10)  # Special choke point 2
 
     path = astar(maze, start, endfirst, compartment, end, startcompartment)
 
