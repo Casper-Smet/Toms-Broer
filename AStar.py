@@ -86,9 +86,17 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
                 if startcompartment in (6, 7, 8, '6b', '7b', '8c', '8d'):
                     path = chokepoint(maze, (9, 14), endstored, path)
 
-            if compartment in (7, '6b', '7b', '8c'):
+            if compartment == '8c':
                 if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
                     path = chokepoint(maze, (9, 14), endstored, path)
+
+            if compartment in ('6b', '7b'):
+                if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
+                    path = doublechokepoint(maze, (9, 14), (10, 10), path, endstored)
+
+            if compartment == 7:
+                if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
+                    path = doublechokepoint(maze, (9, 14), (11, 10), path, endstored)
 
             if compartment in (8, '8d'):
                 if startcompartment in (1, 2, 3, 4, '1b', '2b', '2c'):
