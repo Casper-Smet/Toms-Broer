@@ -134,12 +134,16 @@ def game_main():
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
 root = Tk()
+logo = PhotoImage(file = "tomsbroer.PNG")
 root.title("Tom's Broer")
 root.geometry('1280x720')
+root.config(bg= "#303135")
+banner = Label(root, image = logo, bg = "#303135")
+banner.pack(pady=1)
 embed = Frame(root, width=499, height=550)
-embed.grid(row=0, column=0, sticky=S)
-txt = Entry(root, width=75)
-txt.grid(row = 0, column = 200)
+embed.pack(pady=0, side = LEFT)
+txt = Entry(root, width=25, relief = GROOVE, font = ("Arial", 20))
+txt.pack(pady=20, padx= 25,)
 root.update()
 
 # def pushed():
