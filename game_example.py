@@ -135,6 +135,7 @@ def game_main():
 # on exit.
 root = Tk()
 logo = PhotoImage(file = "tomsbroer.PNG")
+icon = root.wm_iconbitmap('icon.ico')
 root.title("Tom's Broer")
 root.geometry('1280x720')
 root.config(bg= "#303135")
