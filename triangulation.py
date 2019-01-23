@@ -68,6 +68,11 @@ def location(P0, P1, P2, r0, r1, r2):
 def dBm2m(MHz, dBm):
 	from math import log10
 
+	global Windows
+
+	if Windows:
+		dbm = (dbm/2)-100
+
 	FSPL = 27.55
 
 	m = round(10**((FSPL-(20*log10(MHz))-dBm)/20), 2)
@@ -78,26 +83,52 @@ def get_dBm(APName):
 
 	import subprocess
 
-	subprocess.run(['sudo iwlist wlo1 scan | grep -i -B 5 {} > ./iwlist_scan.txt'.format(APName)], shell=True)
+	global Windows
 
-	f = open('iwlist_scan.txt')
+	if Windows:
+		netscan = subprocess.run(['netsh wlan show networks mode = bssid'], shell=True, stdout=subprocess.PIPE)
+		f = open('netscan.txt', 'w')
+		f.write(netscan.stdout)
+		f.close()
+
+	else:
+		subprocess.run(['sudo iwlist wlo1 scan | grep -i -B 5 {} > ./netscan.txt'.format(APName)], shell=True)
+
+	f = open('netscan.txt')
 	lines = f.readlines()
 	f.close()
 
 	frequency = 0
 	signal = 0
 
-	for l in range(len(lines)):
+	if Windows:
+		for l in range(len(lines)):
 		lines[l] = lines[l].strip()
-		if 'Frequency:' in lines[l]:
+		if 'Radio type' in lines[l]:
 			freq = lines[l].split(':')
-			freq = freq[1].split(' ')
-			frequency = int(float(freq[0])*1000)
+			freq = freq[1].strip()
+			if freq == '802.11ac':
+				frequency = 5230
+			else:
+				frequency = 2470
 
 		if 'Signal' in lines[l]:
-			sig = lines[l].split('=')
-			sig = sig[-1].split(' ')
-			signal = int(sig[0])
+			sig = lines[l].split(':')
+			sig = sig[1].strip()
+			sig = sig[:-1]
+			signal = int(sig)
+	else:
+		for l in range(len(lines)):
+			lines[l] = lines[l].strip()
+			if 'Frequency:' in lines[l]:
+				freq = lines[l].split(':')
+				freq = freq[1].split(' ')
+				frequency = int(float(freq[0])*1000)
+
+			if 'Signal' in lines[l]:
+				sig = lines[l].split('=')
+				sig = sig[-1].split(' ')
+				signal = int(sig[0])
 
 	return frequency, signal
 
@@ -175,5 +206,10 @@ def menu():
 			get_apCoords()
 
 	get_apNames()
+
+from platform import system
+
+if system == 'Windows':
+	Windows = True
 
 menu()
