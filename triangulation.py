@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 def cc_intersection(P0, P1, r0, r1):
 
 	from math import sqrt, fabs
@@ -42,7 +44,7 @@ def calc_center(p):
 	x = det(d, xdiff)/div
 	y = det(d, ydiff)/div
 
-	return y, x
+	return round(21-y), round(x)
 
 def location(P0, P1, P2, r0, r1, r2):
 
@@ -75,7 +77,7 @@ def dBm2m(MHz, dBm):
 
 	FSPL = 27.55
 
-	m = round(10**((FSPL-(20*log10(MHz))-dBm)/20), 2)
+	m = round((10**((FSPL-(20*log10(MHz))-dBm)/20))*0.5, 2)
 
 	return m
 
@@ -136,12 +138,12 @@ def menu():
 
 	from termcolor import colored
 
-	P0 = [0,0]
-	P1 = [2,0]
-	P2 = [1,2]
+	P0 = [18,16]
+	P1 = [19,8]
+	P2 = [0,7]
 
-	AP0 = 'internet'
-	AP1 = 'win-5b'
+	AP0 = 'v1f4ap1'
+	AP1 = 'v1f4ap2'
 	AP2 = 'v1f4ap3'
 
 	class AccessPointError(Exception):
@@ -185,9 +187,9 @@ def menu():
 				r2 = round(r2, 2)
 
 				print('Access Points: ')
-				print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0))
-				print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1))
-				print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2))
+				print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0*2))
+				print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1*2))
+				print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2*2))
 
 				l = location(P0, P1, P2, r0, r1, r2)
 				print('You are at: {}'.format(l))
