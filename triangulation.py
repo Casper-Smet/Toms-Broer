@@ -42,7 +42,7 @@ def calc_center(p):
 	x = det(d, xdiff)/div
 	y = det(d, ydiff)/div
 
-	return x, y
+	return y, x
 
 def location(P0, P1, P2, r0, r1, r2):
 
@@ -103,20 +103,20 @@ def get_dBm(APName):
 
 	if Windows:
 		for l in range(len(lines)):
-		lines[l] = lines[l].strip()
-		if 'Radio type' in lines[l]:
-			freq = lines[l].split(':')
-			freq = freq[1].strip()
-			if freq == '802.11ac':
-				frequency = 5230
-			else:
-				frequency = 2470
+			lines[l] = lines[l].strip()
+			if 'Radio type' in lines[l]:
+				freq = lines[l].split(':')
+				freq = freq[1].strip()
+				if freq == '802.11ac':
+					frequency = 5230
+				else:
+					frequency = 2470
 
-		if 'Signal' in lines[l]:
-			sig = lines[l].split(':')
-			sig = sig[1].strip()
-			sig = sig[:-1]
-			signal = int(sig)
+			if 'Signal' in lines[l]:
+				sig = lines[l].split(':')
+				sig = sig[1].strip()
+				sig = sig[:-1]
+				signal = int(sig)
 	else:
 		for l in range(len(lines)):
 			lines[l] = lines[l].strip()
@@ -207,9 +207,10 @@ def menu():
 
 	get_apNames()
 
-from platform import system
+import platform
 
-if system == 'Windows':
+Windows = False
+if platform.system == 'Windows':
 	Windows = True
 
 menu()
