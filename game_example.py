@@ -5,87 +5,6 @@ from AStar import *
 from tkinter import *
 import os
 import platform
-import re
-
-lista = ['Robot arm','Snake','3D Printer','Soldeerplek','Server','Whiteboard','Werkbank']
-
-
-class AutocompleteEntry(Entry):
-    def __init__(self, lista, *args, **kwargs):
-
-        Entry.__init__(self, *args, **kwargs)
-        self.lista = lista
-        self.var = self["textvariable"]
-        if self.var == '':
-            self.var = self["textvariable"] = StringVar()
-
-        self.var.trace('w', self.changed)
-        self.bind("<Right>", self.selection)
-        self.bind("<Up>", self.up)
-        self.bind("<Down>", self.down)
-
-        self.lb_up = False
-
-    def changed(self, name, index, mode):
-
-        if self.var.get() == '':
-            self.lb.destroy()
-            self.lb_up = False
-        else:
-            words = self.comparison()
-            if words:
-                if not self.lb_up:
-                    self.lb = Listbox()
-                    self.lb.bind("<Double-Button-1>", self.selection)
-                    self.lb.bind("<Right>", self.selection)
-                    self.lb.place(x=self.winfo_x(), y=self.winfo_y() + self.winfo_height())
-                    self.lb_up = True
-
-                self.lb.delete(0, END)
-                for w in words:
-                    self.lb.insert(END, w)
-            else:
-                if self.lb_up:
-                    self.lb.destroy()
-                    self.lb_up = False
-
-    def selection(self, event):
-
-        if self.lb_up:
-            self.var.set(self.lb.get(ACTIVE))
-            self.lb.destroy()
-            self.lb_up = False
-            self.icursor(END)
-
-    def up(self, event):
-
-        if self.lb_up:
-            if self.lb.curselection() == ():
-                index = '0'
-            else:
-                index = self.lb.curselection()[0]
-            if index != '0':
-                self.lb.selection_clear(first=index)
-                index = str(int(index) - 1)
-                self.lb.selection_set(first=index)
-                self.lb.activate(index)
-
-    def down(self, event):
-
-        if self.lb_up:
-            if self.lb.curselection() == ():
-                index = '0'
-            else:
-                index = self.lb.curselection()[0]
-            if index != END:
-                self.lb.selection_clear(first=index)
-                index = str(int(index) + 1)
-                self.lb.selection_set(first=index)
-                self.lb.activate(index)
-
-    def comparison(self):
-        pattern = re.compile('.*' + self.var.get() + '.*')
-        return [w for w in self.lista if re.match(pattern, w)]
 
 
 class Background(pygame.sprite.Sprite):
@@ -217,18 +136,23 @@ def game_main():
 
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
+# GUI
 root = Tk()
-logo = PhotoImage(file = "tomsbroer.PNG")
-icon = root.wm_iconbitmap('icon.ico')
+logo = PhotoImage(file = "pictures/tomsbroer.PNG")
+icon = root.wm_iconbitmap('pictures/icon.ico')
+lowbanner = PhotoImage(file = "pictures/Banner.PNG")
 root.title("Tom's Broer")
-root.geometry('1280x720')
-root.config(bg= "#303135")
-banner = Label(root, image = logo, bg = "#303135")
-banner.pack(pady=1)
+w, h =root.winfo_screenwidth(), root.winfo_screenheight()
+root.geometry("%dx%d+0+0" % (w, h))
+root.config(bg= "white")
+banner1 = Label(root, image = logo, width = 1920, bg = "#303135")
+banner1.pack(pady=1)
+banner2 = Label(root, image = lowbanner, bg = 'white')
+banner2.pack( pady = 40, side = BOTTOM)
 embed = Frame(root, width=499, height=550)
-embed.pack(pady=0, side = LEFT)
-entry = AutocompleteEntry(lista, root, width=25, relief = GROOVE, font = ("Arial", 20))
-entry.pack(pady=20, padx= 25,)
+embed.pack(pady=1, side = LEFT)
+txt = Entry(root, width=25, font = ("Arial", 20))
+txt.pack(pady=20, padx= 25,)
 root.update()
 
 # def pushed():
@@ -242,5 +166,3 @@ os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
 
 pygame.quit()
 game_main()
-
-#  http://code.activestate.com/recipes/578253-an-entry-with-autocompletion-for-the-tkinter-gui/
