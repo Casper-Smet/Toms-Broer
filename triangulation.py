@@ -72,11 +72,11 @@ def dBm2m(MHz, dBm):
 
 	global Windows
 
-	if Windows:
-		dbm = (dbm/2)-100
+	if platform.system() == 'Windows':
+		dBm = (dBm/2)-100
 
 	FSPL = 27.55
-
+	print(dBm)
 	m = round((10**((FSPL-(20*log10(MHz))-dBm)/20))*0.5, 2)
 
 	return m
@@ -87,10 +87,10 @@ def get_dBm(APName):
 
 	global Windows
 
-	if Windows:
-		netscan = subprocess.run(['netsh wlan show networks mode = bssid'], shell=True, stdout=subprocess.PIPE)
+	if platform.system() == 'Windows':
+		netscan = subprocess.run('netsh wlan show networks mode = bssid', shell=True, stdout=subprocess.PIPE)
 		f = open('netscan.txt', 'w')
-		f.write(netscan.stdout)
+		f.write(netscan.stdout.decode('utf-8'))
 		f.close()
 
 	else:
@@ -103,7 +103,7 @@ def get_dBm(APName):
 	frequency = 0
 	signal = 0
 
-	if Windows:
+	if platform.system() == 'Windows':
 		for l in range(len(lines)):
 			lines[l] = lines[l].strip()
 			if 'Radio type' in lines[l]:
@@ -178,6 +178,8 @@ def menu():
 				dbP1 = get_dBm(AP1)
 				dbP2 = get_dBm(AP2)
 
+				print(dbP0)
+
 				r0 = dBm2m(dbP0[0], dbP0[1])
 				r1 = dBm2m(dbP1[0], dbP1[1])
 				r2 = dBm2m(dbP2[0], dbP2[1])
@@ -193,6 +195,7 @@ def menu():
 
 				l = location(P0, P1, P2, r0, r1, r2)
 				print('You are at: {}'.format(l))
+				return l
 
 		except NameError:
 			print(colored('Wrong format', 'red'))
@@ -212,7 +215,7 @@ def menu():
 import platform
 
 Windows = False
-if platform.system == 'Windows':
+if platform.system() == 'Windows':
 	Windows = True
 
 menu()

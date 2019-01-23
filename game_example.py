@@ -98,8 +98,17 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
-
+        print("memes")
         counter = 0
+        BackGround = Background("maps/background-blueprintv3.png", [0, 0])
+
+        # This sets the WIDTH and HEIGHT of each grid location
+        # WIDTH = 13
+        # HEIGHT = 33
+        HEIGHT = WIDTH = 25  # Needs adjusting
+
+        # This sets the margin between each cell
+        MARGIN = 0
 
         if self.lb_up:
             self.var.set(self.lb.get(ACTIVE))
@@ -107,9 +116,11 @@ class AutocompleteEntry(Entry):
             self.lb_up = False
             self.icursor(END)
         else:
+            print("memes2")
+            global grid
+            grid = matrix_reader()
             for q in dictionary:
                 if entry.get() == q:
-                    grid = matrix_reader()
                     counter = 1
                     end = dictionary['{}'.format(q)]
                     print(end)
@@ -122,8 +133,10 @@ class AutocompleteEntry(Entry):
                         column = path[x][1]
                         row = path[x][0]
                         grid[row][column] = 4
-                    print(grid)
-                    for row in range(len(grid)):
+                        print(grid[row][column])
+                    print("Regel 147:    ",grid)
+                    grid_draw()
+                    """for row in range(len(grid)):
                         for column in range(len(grid[0])):
                             print(row,column)
                             color = WHITE
@@ -137,8 +150,7 @@ class AutocompleteEntry(Entry):
                             if color != WHITE:
                                 pygame.draw.rect(screen, color,
                                                  [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN,
-                                                  WIDTH, HEIGHT])
-
+                                                  WIDTH, HEIGHT])"""
             if counter == 0 :
                 print('This location does not exist, please choose another')
 
@@ -155,7 +167,21 @@ class Background(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = location
 
 
-def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH, BackGround):
+def grid_draw():
+    #print("memes")
+    # Set the HEIGHT and WIDTH of the screen
+    WINDOW_SIZE = [499, 550]
+    screen = pygame.display.set_mode(WINDOW_SIZE)
+    BackGround = Background("maps/background-blueprintv3.png", [0, 0])
+
+    # This sets the WIDTH and HEIGHT of each grid location
+    # WIDTH = 13
+    # HEIGHT = 33
+    HEIGHT = WIDTH = 25  # Needs adjusting
+
+    # This sets the margin between each cell
+    MARGIN = 0
+
     # Define some colors
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
@@ -180,7 +206,8 @@ def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH, BackGround):
                 color = PURPLE
             if grid[row][column] == 4:
                 color = BLUE
-            print(screen)
+                print(row,column)
+            #print(screen)
             if color != WHITE:
                 pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
 
@@ -188,25 +215,16 @@ def grid_draw(grid, screen, MARGIN, HEIGHT, WIDTH, BackGround):
 
 def game_main():
 
-    BackGround = Background("maps/background-blueprintv3.png", [0, 0])
 
-    # This sets the WIDTH and HEIGHT of each grid location
-    # WIDTH = 13
-    # HEIGHT = 33
-    HEIGHT = WIDTH = 25  # Needs adjusting
-
-    # This sets the margin between each cell
-    MARGIN = 0
 
     # Create a 2 dimensional array based on binary map.
+    global grid
     grid = matrix_reader()
 
     # Initialize pygame
     pygame.init()
 
-    # Set the HEIGHT and WIDTH of the screen
-    WINDOW_SIZE = [499, 550]
-    screen = pygame.display.set_mode(WINDOW_SIZE)
+
 
     # Set title of screen
     pygame.display.set_caption("Array Backed Grid")
@@ -259,12 +277,13 @@ def game_main():
                             column = path[x][1]
                             row = path[x][0]
                             grid[row][column] = 4
+                        print("Regel 278:     ", grid)
                     # Print clicked coördinates (debug)
                     print("Click ", pos, "Grid coordinates: ", row, column)
 
 
         # Draw the grid.
-        grid_draw(grid,screen, MARGIN, HEIGHT, WIDTH, BackGround)
+        grid_draw()
 
         # Limit to 60 frames per second
         clock.tick(60)
@@ -299,7 +318,9 @@ root.update()
 #     lbl.pack()
 #     lbl.configure(text="Searched!")
 
+print(platform.system())
 if platform.system == "Windows":
+    print("memes")
     os.environ['SDL_VIDEODRIVER'] = 'windib'
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
 
