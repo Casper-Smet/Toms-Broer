@@ -29,15 +29,15 @@ class AutocompleteEntry(Entry):
 
         Entry.__init__(self, *args, **kwargs)
         self.lista = lista
-        self.var = self["textvariable"]
+        self.var = self['textvariable']
         if self.var == '':
-            self.var = self["textvariable"] = StringVar()
+            self.var = self['textvariable'] = StringVar()
 
         self.var.trace('w', self.changed)
-        self.bind("<Right>", self.selection)
-        self.bind("<Up>", self.up)
-        self.bind("<Down>", self.down)
-        self.bind("<Return>", self.enter)
+        self.bind('<Right>', self.selection)
+        self.bind('<Up>', self.up)
+        self.bind('<Down>', self.down)
+        self.bind('<Return>', self.enter)
 
         self.lb_up = False
 
@@ -51,8 +51,8 @@ class AutocompleteEntry(Entry):
             if words:
                 if not self.lb_up:
                     self.lb = Listbox()
-                    self.lb.bind("<Double-Button-1>", self.selection)
-                    self.lb.bind("<Right>", self.selection)
+                    self.lb.bind('<Double-Button-1>', self.selection)
+                    self.lb.bind('<Right>', self.selection)
                     self.lb.place(x=self.winfo_x(), y=self.winfo_y() + self.winfo_height())
                     self.lb_up = True
 
@@ -99,8 +99,9 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
+        
         counter = 0
-        BackGround = Background("maps/background-blueprintv3.png", [0, 0])
+        BackGround = Background('maps/background-blueprintv3.png', [0, 0])
 
         # This sets the WIDTH and HEIGHT of each grid location
         # WIDTH = 13
@@ -133,9 +134,9 @@ class AutocompleteEntry(Entry):
                         row = path[x][0]
                         grid[row][column] = 4
                         print(grid[row][column])
-                    print("Regel 147:    ",grid)
+                    print('Regel 147:    ',grid)
                     grid_draw()
-                    """for row in range(len(grid)):
+                    '''for row in range(len(grid)):
                         for column in range(len(grid[0])):
                             print(row,column)
                             color = WHITE
@@ -149,7 +150,7 @@ class AutocompleteEntry(Entry):
                             if color != WHITE:
                                 pygame.draw.rect(screen, color,
                                                  [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN,
-                                                  WIDTH, HEIGHT])"""
+                                                  WIDTH, HEIGHT])'''
             if counter == 0 :
                 print('This location does not exist, please choose another')
 
@@ -170,7 +171,7 @@ def grid_draw():
     # Set the HEIGHT and WIDTH of the screen
     WINDOW_SIZE = [499, 550]
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    BackGround = Background("maps/background-blueprintv3.png", [0, 0])
+    BackGround = Background('maps/background-blueprintv3.png', [0, 0])
 
     # This sets the WIDTH and HEIGHT of each grid location
     # WIDTH = 13
@@ -225,7 +226,7 @@ def game_main():
 
 
     # Set title of screen
-    pygame.display.set_caption("Array Backed Grid")
+    pygame.display.set_caption('Array Backed Grid')
 
     # Loop until the user clicks the close button.
     done = False
@@ -281,9 +282,9 @@ def game_main():
                             column = path[x][1]
                             row = path[x][0]
                             grid[row][column] = 4
-                        print("Regel 278:     ", grid)
+                        print('Regel 278:     ', grid)
                     # Print clicked coördinates (debug)
-                    print("Click ", pos, "Grid coordinates: ", row, column)
+                    print('Click ', pos, 'Grid coordinates: ', row, column)
 
 
         # Draw the grid.
@@ -300,33 +301,33 @@ def game_main():
 # on exit.
 # GUI
 root = Tk()
-logo = PhotoImage(file = "pictures/tomsbroer.png")
+logo = PhotoImage(file = 'pictures/tomsbroer.png')
 # try:
 #     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.ico')
 # except:
 #     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
-lowbanner = PhotoImage(file = "pictures/Banner.png")
-root.title("Tom's Broer")
+lowbanner = PhotoImage(file = 'pictures/Banner.png')
+root.title('Tom\'s Broer')
 w, h =root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry("%dx%d+0+0" % (w, h))
-root.config(bg= "white")
-banner1 = Label(root, image = logo, width = 1920, bg = "#303135")
+root.geometry('%dx%d+0+0' % (w, h))
+root.config(bg= 'white')
+banner1 = Label(root, image = logo, width = 1920, bg = '#303135')
 banner1.pack(pady=1)
 banner2 = Label(root, image = lowbanner, bg = 'white')
 banner2.pack( pady = 40, side = BOTTOM)
 embed = Frame(root, width=499, height=550)
 embed.pack(pady=1, side = LEFT)
-entry = AutocompleteEntry(lista, root, width=25, font = ("Arial", 20))
+entry = AutocompleteEntry(lista, root, width=25, font = ('Arial', 20))
 entry.pack(pady=20, padx= 25,)
 root.update()
 
 # def pushed():
 #     lbl = Label(root, text = 'Hello')
 #     lbl.pack()
-#     lbl.configure(text="Searched!")
+#     lbl.configure(text='Searched!')
 
 print(platform.system())
-if platform.system == "Windows":
+if platform.system == 'Windows':
     os.environ['SDL_VIDEODRIVER'] = 'windib'
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
 
