@@ -99,7 +99,6 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
-        print("memes")
         counter = 0
         BackGround = Background("maps/background-blueprintv3.png", [0, 0])
 
@@ -117,7 +116,6 @@ class AutocompleteEntry(Entry):
             self.lb_up = False
             self.icursor(END)
         else:
-            print("memes2")
             global grid
             grid = matrix_reader()
             for q in dictionary:
@@ -169,7 +167,6 @@ class Background(pygame.sprite.Sprite):
 
 
 def grid_draw():
-    #print("memes")
     # Set the HEIGHT and WIDTH of the screen
     WINDOW_SIZE = [499, 550]
     screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -248,6 +245,7 @@ def game_main():
         if location:
             grid[location[0]][location[1]] = 2
         for event in pygame.event.get():  # User did something
+            print(event)
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -303,7 +301,10 @@ def game_main():
 # GUI
 root = Tk()
 logo = PhotoImage(file = "pictures/tomsbroer.png")
-icon = root.wm_iconbitmap('pictures/icon.ico')
+# try:
+#     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.ico')
+# except:
+#     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
 lowbanner = PhotoImage(file = "pictures/Banner.png")
 root.title("Tom's Broer")
 w, h =root.winfo_screenwidth(), root.winfo_screenheight()
@@ -326,7 +327,6 @@ root.update()
 
 print(platform.system())
 if platform.system == "Windows":
-    print("memes")
     os.environ['SDL_VIDEODRIVER'] = 'windib'
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
 
