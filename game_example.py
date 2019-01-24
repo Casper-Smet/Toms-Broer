@@ -302,9 +302,9 @@ def game_main():
 # on exit.
 # GUI
 root = Tk()
-logo = PhotoImage(file = "pictures/tomsbroer.PNG")
+logo = PhotoImage(file = "pictures/tomsbroer.png")
 icon = root.wm_iconbitmap('pictures/icon.ico')
-lowbanner = PhotoImage(file = "pictures/Banner.PNG")
+lowbanner = PhotoImage(file = "pictures/Banner.png")
 root.title("Tom's Broer")
 w, h =root.winfo_screenwidth(), root.winfo_screenheight()
 root.geometry("%dx%d+0+0" % (w, h))
