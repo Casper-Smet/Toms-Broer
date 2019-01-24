@@ -235,12 +235,13 @@ def game_main():
     clock = pygame.time.Clock()
     # Initialize start and end_node
     start = end = tuple()
-    location = menu()
-    start = location
-    print(location[0],location[1])
+
 
     # -------- Main Program Loop -----------
     while not done:
+        location = menu()
+        start = location
+        print(location[0], location[1])
         #updates TKinter GUI
         root.update()
         if location:
