@@ -1,0 +1,15 @@
+ 
+Interface name : WiFi 
+There are 1 networks currently visible. 
+
+SSID 1 : eduroam
+    Network type            : Infrastructure
+    Authentication          : WPA2-Enterprise
+    Encryption              : CCMP 
+    BSSID 1                 : b0:8b:cf:af:e0:af
+         Signal             : 99%  
+         Radio type         : 802.11ac
+         Channel            : 40 
+         Basic rates (Mbps) : 24
+         Other rates (Mbps) : 36 48 54
+

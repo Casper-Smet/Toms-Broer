@@ -157,7 +157,7 @@ def menu():
 		# AP0 = input('Access Point 1: ')
 		# AP1 = input('Access Point 2: ')
 		# AP2 = input('Access Point 3: ')
-		get_apCoords()
+		return get_apCoords()
 
 	def get_apCoords():
 		nonlocal AP0, AP1, AP2, P0, P1, P2
@@ -210,7 +210,7 @@ def menu():
 			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
 			get_apCoords()
 
-	get_apNames()
+	return get_apNames()
 
 import platform
 
@@ -218,4 +218,4 @@ Windows = False
 if platform.system() == 'Windows':
 	Windows = True
 
-menu()
+#menu()

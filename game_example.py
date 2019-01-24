@@ -3,6 +3,7 @@
 import pygame
 from AStar import *
 from tkinter import *
+from triangulation import *
 import os
 import platform
 import re
@@ -236,11 +237,16 @@ def game_main():
     clock = pygame.time.Clock()
     # Initialize start and end_node
     start = end = tuple()
+    location = menu()
+    start = location
+    print(location[0],location[1])
 
     # -------- Main Program Loop -----------
     while not done:
         #updates TKinter GUI
         root.update()
+        if location:
+            grid[location[0]][location[1]] = 2
         for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
