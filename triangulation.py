@@ -147,9 +147,9 @@ def menu():
 
 	from termcolor import colored
 
-	P0 = [18,16]
-	P1 = [19,8]
-	P2 = [0,7]
+	P0 = [0,10]
+	P1 = [6,4]
+	P2 = [13,13]
 
 	AP0 = 'v1f4ap1'
 	AP1 = 'v1f4ap2'
