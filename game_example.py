@@ -23,7 +23,6 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 lista = ['Robot arm','Snake','3D Printer','Soldeerplek','Server','Whiteboard','Werkbank']
 dictionary = {'Robot arm': (2, 19), 'Snake': (9, 19), '3D Printer': (20, 14), 'Soldeerplek': (2, 14), 'Server': (2, 9), 'Whiteboard': (21, 7), 'Werkbank': (2, 19)}
 
-
 class AutocompleteEntry(Entry):
     def __init__(self, lista, *args, **kwargs):
 
@@ -158,14 +157,12 @@ class AutocompleteEntry(Entry):
         pattern = re.compile('.*' + self.var.get() + '.*')
         return [w for w in self.lista if re.match(pattern, w)]
 
-
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
-
 
 def grid_draw():
     # Set the HEIGHT and WIDTH of the screen
@@ -210,11 +207,9 @@ def grid_draw():
             if color != WHITE:
                 pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
 
-
-
 def game_main():
 
-
+    import time
 
     # Create a 2 dimensional array based on binary map.
     global grid
@@ -222,8 +217,6 @@ def game_main():
 
     # Initialize pygame
     pygame.init()
-
-
 
     # Set title of screen
     pygame.display.set_caption('Array Backed Grid')
@@ -236,18 +229,41 @@ def game_main():
     # Initialize start and end_node
     start = end = tuple()
 
+    locationlist = []
 
     # -------- Main Program Loop -----------
     while not done:
-        location = menu()
+        try:
+            location = menu()
+        except:
+            time.sleep(0.2)
+            location = menu()
+
+        if location[0] > (len(grid[0])-1) or location[1] > (len(grid)-1) or location[0] < 0 or location[1] < 0:
+            location = menu()
+
+        if len(locationlist) <= 3:
+            locationlist.append(location)
+        else:
+            del locationlist[0]
+            locationlist.append(location)
+
+        xTemp = []
+        yTemp = []
+
+        for i in range(len(locationlist)):
+            xTemp.append(locationlist[i][1])
+            yTemp.append(locationlist[i][0])
+
+        location[0] = int(sum(yTemp)/len(yTemp))
+        location[1] = int(sum(xTemp)/len(xTemp))
+
         start = location
-        print(location[0], location[1])
         #updates TKinter GUI
         root.update()
         if location:
             grid[location[0]][location[1]] = 2
         for event in pygame.event.get():  # User did something
-            print(event)
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -287,16 +303,14 @@ def game_main():
                     # Print clicked coördinates (debug)
                     print('Click ', pos, 'Grid coordinates: ', row, column)
 
-
         # Draw the grid.
         grid_draw()
-
+        grid[location[0]][location[1]] = 0
         # Limit to 60 frames per second
         clock.tick(60)
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
-
 
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
@@ -327,7 +341,6 @@ root.update()
 #     lbl.pack()
 #     lbl.configure(text='Searched!')
 
-print(platform.system())
 if platform.system == 'Windows':
     os.environ['SDL_VIDEODRIVER'] = 'windib'
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())

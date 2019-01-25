@@ -1,10 +1,12 @@
 #!/usr/bin/python3
+import platform
+Windows = platform.system() == 'Windows'
 
 def cc_intersection(P0, P1, r0, r1):
 
 	from math import sqrt, fabs
 
-	P2 = [None,None]
+	P2   = [None,None]
 	P3_1 = [None,None]
 	P3_2 = [None,None]
 
@@ -14,8 +16,8 @@ def cc_intersection(P0, P1, r0, r1):
 
 	h = sqrt(fabs(pow(r0,2)-pow(a,2)))
 
-	P2[0] = P0[0]+a*(P1[0]-P0[0])/d
-	P2[1] = P0[1]+a*(P1[1]-P0[1])/d
+	P2[0]   = P0[0]+a*(P1[0]-P0[0])/d
+	P2[1]   = P0[1]+a*(P1[1]-P0[1])/d
 
 	P3_1[0] = P2[0]+h*(P1[1]-P0[1])/d
 	P3_1[1] = P2[1]-h*(P1[0]-P0[0])/d
@@ -44,7 +46,7 @@ def calc_center(p):
 	x = det(d, xdiff)/div
 	y = det(d, ydiff)/div
 
-	return round(21-y), round(x)
+	return [int(round(21-y)), int(round(x))]
 
 def location(P0, P1, P2, r0, r1, r2):
 
@@ -76,8 +78,10 @@ def dBm2m(MHz, dBm):
 		dBm = (dBm/2)-100
 
 	FSPL = 27.55
-	print(dBm)
 	m = round((10**((FSPL-(20*log10(MHz))-dBm)/20))*0.5, 2)
+
+	if m > 50:
+		menu()
 
 	return m
 
@@ -139,6 +143,8 @@ def get_dBm(APName):
 
 def menu():
 
+	print('======[Scanning]======')
+
 	from termcolor import colored
 
 	P0 = [18,16]
@@ -152,7 +158,7 @@ def menu():
 	class AccessPointError(Exception):
 		pass
 
-	print('\u001b[1mThis applet will attempt to triangulate your position based on WiFi Access Points\u001b[0m')
+	# print('\u001b[1mThis applet will attempt to triangulate your position based on WiFi Access Points\u001b[0m')
 
 	def get_apNames():
 		nonlocal AP0, AP1, AP2
@@ -181,8 +187,6 @@ def menu():
 				dbP1 = get_dBm(AP1)
 				dbP2 = get_dBm(AP2)
 
-				print(dbP0)
-
 				r0 = dBm2m(dbP0[0], dbP0[1])
 				r1 = dBm2m(dbP1[0], dbP1[1])
 				r2 = dBm2m(dbP2[0], dbP2[1])
@@ -191,7 +195,7 @@ def menu():
 				r1 = round(r1, 2)
 				r2 = round(r2, 2)
 
-				print('Access Points: ')
+				print('\n======[Location Data]=======')
 				print('AP1: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP0[0], dbP0[1], r0*2))
 				print('AP2: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP1[0], dbP1[1], r1*2))
 				print('AP3: {:>4} MHz, {:>3} dBm, distance: {:1.2f}m'.format(dbP2[0], dbP2[1], r2*2))
@@ -214,11 +218,3 @@ def menu():
 			get_apCoords()
 
 	return get_apNames()
-
-import platform
-
-Windows = False
-if platform.system() == 'Windows':
-	Windows = True
-
-#menu()
