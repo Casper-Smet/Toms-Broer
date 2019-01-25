@@ -8,6 +8,7 @@ import os
 import platform
 import re
 import time
+import sys
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -290,41 +291,43 @@ def game_main():
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
+try:
+    # Be IDLE friendly. If you forget this line, the program will 'hang'
+    # on exit.
+    # GUI
+    root = Tk()
+    logo = PhotoImage(file = 'pictures/tomsbroer.png')
+    # try:
+    #     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.ico')
+    # except:
+    #     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
+    lowbanner = PhotoImage(file = 'pictures/Banner.png')
+    root.title('Tom\'s Broer')
+    w, h =root.winfo_screenwidth(), root.winfo_screenheight()
+    root.geometry('%dx%d+0+0' % (w, h))
+    root.config(bg= 'white')
+    banner1 = Label(root, image = logo, width = 1920, bg = '#303135')
+    banner1.pack(pady=1)
+    banner2 = Label(root, image = lowbanner, bg = 'white')
+    banner2.pack( pady = 40, side = BOTTOM)
+    embed = Frame(root, width=499, height=550)
+    embed.pack(pady=1, side = LEFT)
+    entry = AutocompleteEntry(lista, root, width=25, font = ('Arial', 20))
+    entry.pack(pady=20, padx= 25,)
+    root.update()
 
-# Be IDLE friendly. If you forget this line, the program will 'hang'
-# on exit.
-# GUI
-root = Tk()
-logo = PhotoImage(file = 'pictures/tomsbroer.png')
-# try:
-#     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.ico')
-# except:
-#     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
-lowbanner = PhotoImage(file = 'pictures/Banner.png')
-root.title('Tom\'s Broer')
-w, h =root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry('%dx%d+0+0' % (w, h))
-root.config(bg= 'white')
-banner1 = Label(root, image = logo, width = 1920, bg = '#303135')
-banner1.pack(pady=1)
-banner2 = Label(root, image = lowbanner, bg = 'white')
-banner2.pack( pady = 40, side = BOTTOM)
-embed = Frame(root, width=499, height=550)
-embed.pack(pady=1, side = LEFT)
-entry = AutocompleteEntry(lista, root, width=25, font = ('Arial', 20))
-entry.pack(pady=20, padx= 25,)
-root.update()
+    # def pushed():
+    #     lbl = Label(root, text = 'Hello')
+    #     lbl.pack()
+    #     lbl.configure(text='Searched!')
 
-# def pushed():
-#     lbl = Label(root, text = 'Hello')
-#     lbl.pack()
-#     lbl.configure(text='Searched!')
-
-if platform.system == 'Windows':
-    os.environ['SDL_VIDEODRIVER'] = 'windib'
-os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
-
-pygame.quit()
-game_main()
+    if platform.system == 'Windows':
+        os.environ['SDL_VIDEODRIVER'] = 'windib'
+    os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
+    pygame.quit()
+    game_main()
+except:
+    print('\u001b[31m\u001b[7mFailed successfully\u001b[0m\nBye!')
+    sys.exit(0)
 
 # http://code.activestate.com/recipes/578253-an-entry-with-autocompletion-for-the-tkinter-gui/
