@@ -7,6 +7,7 @@ from triangulation import *
 import os
 import platform
 import re
+import time
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -98,34 +99,24 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
-        
+        current_location = location_convert()
         counter = 0
-        BackGround = Background('maps/background-blueprintv3.png', [0, 0])
-
-        # This sets the WIDTH and HEIGHT of each grid location
-        # WIDTH = 13
-        # HEIGHT = 33
-        HEIGHT = WIDTH = 25  # Needs adjusting
-
-        # This sets the margin between each cell
-        MARGIN = 0
-
         if self.lb_up:
             self.var.set(self.lb.get(ACTIVE))
             self.lb.destroy()
             self.lb_up = False
             self.icursor(END)
-        else:
-            global grid
-            grid = matrix_reader()
+
+        elif type(current_location) == list:
+            #grid = matrix_reader()
+            start = location_convert()
             for q in dictionary:
                 if entry.get() == q:
                     counter = 1
                     end = dictionary['{}'.format(q)]
                     print(end)
-                    path = dmain((8, 19), end)
+                    path = dmain(start, end)
                     print(path)
-                    grid[8][19] = 2
                     grid[end[0]][end[1]] = 3
 
                     for x in range(1, len(path) - 1):
@@ -133,24 +124,9 @@ class AutocompleteEntry(Entry):
                         row = path[x][0]
                         grid[row][column] = 4
                         print(grid[row][column])
-                    print('Regel 147:    ',grid)
-                    grid_draw()
-                    '''for row in range(len(grid)):
-                        for column in range(len(grid[0])):
-                            print(row,column)
-                            color = WHITE
-                            if grid[row][column] == 2:
-                                color = GREEN
-                            if grid[row][column] == 3:
-                                color = PURPLE
-                            if grid[row][column] == 4:
-                                color = BLUE
-                            print(screen)
-                            if color != WHITE:
-                                pygame.draw.rect(screen, color,
-                                                 [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN,
-                                                  WIDTH, HEIGHT])'''
-            if counter == 0 :
+                    print('Regel 147:    ', grid)
+                    grid_draw(grid)
+            if counter == 0:
                 print('This location does not exist, please choose another')
 
     def comparison(self):
@@ -164,7 +140,7 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
-def grid_draw():
+def grid_draw(grid):
     # Set the HEIGHT and WIDTH of the screen
     WINDOW_SIZE = [499, 550]
     screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -207,9 +183,35 @@ def grid_draw():
             if color != WHITE:
                 pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
 
-def game_main():
+def location_convert():
+    try:
+        current_location = menu()
+    except:
+        time.sleep(0.2)
+        current_location = menu()
 
-    import time
+    if current_location[0] > (len(grid[0]) - 1) or current_location[1] > (len(grid) - 1) or current_location[0] < 0 or current_location[1] < 0:
+        current_location = menu()
+
+    if len(locationlist) <= 3:
+        locationlist.append(current_location)
+    else:
+        del locationlist[0]
+        locationlist.append(current_location)
+
+    xTemp = []
+    yTemp = []
+
+    for i in range(len(locationlist)):
+        xTemp.append(locationlist[i][1])
+        yTemp.append(locationlist[i][0])
+
+    current_location[0] = int(sum(yTemp) / len(yTemp))
+    current_location[1] = int(sum(xTemp) / len(xTemp))
+
+    return current_location
+
+def game_main():
 
     # Create a 2 dimensional array based on binary map.
     global grid
@@ -229,40 +231,17 @@ def game_main():
     # Initialize start and end_node
     start = end = tuple()
 
+    global locationlist
     locationlist = []
 
     # -------- Main Program Loop -----------
     while not done:
-        try:
-            location = menu()
-        except:
-            time.sleep(0.2)
-            location = menu()
-
-        if location[0] > (len(grid[0])-1) or location[1] > (len(grid)-1) or location[0] < 0 or location[1] < 0:
-            location = menu()
-
-        if len(locationlist) <= 3:
-            locationlist.append(location)
-        else:
-            del locationlist[0]
-            locationlist.append(location)
-
-        xTemp = []
-        yTemp = []
-
-        for i in range(len(locationlist)):
-            xTemp.append(locationlist[i][1])
-            yTemp.append(locationlist[i][0])
-
-        location[0] = int(sum(yTemp)/len(yTemp))
-        location[1] = int(sum(xTemp)/len(xTemp))
-
-        start = location
+        current_location = location_convert()
+        start = location_convert
         #updates TKinter GUI
         root.update()
-        if location:
-            grid[location[0]][location[1]] = 2
+        if current_location:
+            grid[current_location[0]][current_location[1]] = 2
         for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
@@ -304,8 +283,8 @@ def game_main():
                     print('Click ', pos, 'Grid coordinates: ', row, column)
 
         # Draw the grid.
-        grid_draw()
-        grid[location[0]][location[1]] = 0
+        grid_draw(grid)
+        grid[current_location[0]][current_location[1]] = 0
         # Limit to 60 frames per second
         clock.tick(60)
 
