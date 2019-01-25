@@ -99,6 +99,7 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
+        grid = matrix_reader()
         current_location = location_convert()
         counter = 0
         if self.lb_up:
@@ -110,6 +111,10 @@ class AutocompleteEntry(Entry):
         elif type(current_location) == list:
             #grid = matrix_reader()
             start = location_convert()
+            """for x in range(1, len(grid) -1):
+                for i in (1, len(grid[0])-1):
+                    if grid[x][i] == 4:
+                        grid[x][i] = 0"""
             for q in dictionary:
                 if entry.get() == q:
                     counter = 1
@@ -151,6 +156,10 @@ def grid_draw(grid):
     # HEIGHT = 33
     HEIGHT = WIDTH = 25  # Needs adjusting
 
+    current_location = location_convert()
+    start = current_location
+    grid[start[0]][start[1]] = 2
+
     # This sets the margin between each cell
     MARGIN = 0
 
@@ -165,6 +174,8 @@ def grid_draw(grid):
     # Set the screen background
     screen.fill(WHITE)
     screen.blit(BackGround.image, BackGround.rect)
+
+
 
     # Draw the grid
     for row in range(len(grid)):
@@ -217,6 +228,15 @@ def game_main():
     global grid
     grid = matrix_reader()
 
+    global locationlist
+    locationlist = []
+
+    current_location = location_convert()
+    start = current_location
+    grid[start[0]][start[1]] = 2
+
+    # Draw the grid.
+    grid_draw(grid)
     # Initialize pygame
     pygame.init()
 
@@ -231,18 +251,18 @@ def game_main():
     # Initialize start and end_node
     start = end = tuple()
 
-    global locationlist
-    locationlist = []
+
 
     # -------- Main Program Loop -----------
     while not done:
         current_location = location_convert()
-        start = location_convert
+        start = current_location
+        grid[start[0]][start[1]] = 2
         #updates TKinter GUI
         root.update()
         if current_location:
             grid[current_location[0]][current_location[1]] = 2
-        for event in pygame.event.get():  # User did something
+        """for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -281,9 +301,8 @@ def game_main():
                         print('Regel 278:     ', grid)
                     # Print clicked coördinates (debug)
                     print('Click ', pos, 'Grid coordinates: ', row, column)
+        """
 
-        # Draw the grid.
-        grid_draw(grid)
         grid[current_location[0]][current_location[1]] = 0
         # Limit to 60 frames per second
         clock.tick(60)
