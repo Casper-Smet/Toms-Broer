@@ -111,8 +111,8 @@ def get_dBm(APName):
 		data = []
 		for l in range(len(lines)):
 			lines[l] = lines[l].strip()
-			if 'V1F4' in l:
-				data.append(l[l.index(l):l.index(l)+6])
+			#if 'V1F4' in l:
+			#	data.append(l[l.index(l):l.index(l)+6])
 			if 'Radio type' in lines[l]:
 				freq = lines[l].split(':')
 				freq = freq[1].strip()
