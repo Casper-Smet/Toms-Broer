@@ -306,11 +306,10 @@ def dmain(start, end):
                 startcompartment = 7
 
     for i in range(2, 10):  # Above Lower Mid
-        for j in range(10, 11):
-            if end == (j, i):
-                compartment = '7b'
-            if start == (j, i):
-                startcompartment = '7b'
+        if end[1] == i and end[0] == 10:
+            compartment = '7b'
+        if start[1] == i and start[0] == 10:
+            startcompartment = '7b'
 
     for i in range(13, 20):  # Lower Right
         for j in range(11, 22):
