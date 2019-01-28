@@ -305,13 +305,14 @@ def game_main():
 
         grid[current_location[0]][current_location[1]] = 0
         # Limit to 60 frames per second
-        clock.tick(60)
+        clock.tick(30)
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
 
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
+
 # GUI
 root = Tk()
 logo = PhotoImage(file = 'pictures/tomsbroer.png')
@@ -321,13 +322,12 @@ logo = PhotoImage(file = 'pictures/tomsbroer.png')
 #     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
 lowbanner = PhotoImage(file = 'pictures/Banner.png')
 root.title('Tom\'s Broer')
-w, h =root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry('%dx%d+0+0' % (w, h))
+root.geometry("1280x720")
 root.config(bg= 'white')
 banner1 = Label(root, image = logo, width = 1920, bg = '#303135')
 banner1.pack(pady=1)
 banner2 = Label(root, image = lowbanner, bg = 'white')
-banner2.pack( pady = 40, side = BOTTOM)
+banner2.pack( pady = 0, side = BOTTOM)
 embed = Frame(root, width=499, height=550)
 embed.pack(pady=1, side = LEFT)
 entry = AutocompleteEntry(lista, root, width=25, font = ('Arial', 20))
