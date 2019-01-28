@@ -147,6 +147,7 @@ def grid_draw(grid):
     HEIGHT = WIDTH = 25  # Needs adjusting
 
     current_location = location_convert()
+    # current_location = (10, 7)
     start = current_location
     grid[start[0]][start[1]] = 2
 
@@ -240,6 +241,7 @@ def game_main():
         #Call location_convert()
         current_location = location_convert()
         #Set start location
+        # current_location = (10,7)
         start = current_location
 
         #updates TKinter GUI

@@ -19,7 +19,7 @@ def cc_intersection(P0, P1, r0, r1):
 
 	a = (r0**2-r1**2+d**2)/(2*d)
 
-	h = sqrt(fabs(r0,2**2-a,2**2))
+	h = sqrt(fabs(r0**2-a**2))
 
 	P2[0]   = P0[0]+a*(P1[0]-P0[0])/d
 	P2[1]   = P0[1]+a*(P1[1]-P0[1])/d
@@ -184,9 +184,9 @@ def menu():
 
 	from termcolor import colored
 
-	P0 = [0,10]
-	P1 = [6,4]
-	P2 = [13,13]
+	P0 = [14,8]
+	P1 = [2,8]
+	P2 = [10,2]
 
 	AP0 = 'v1f4ap1'
 	AP1 = 'v1f4ap2'
@@ -229,9 +229,9 @@ def menu():
 				dbP1 = get_dBm(AP1)
 				dbP2 = get_dBm(AP2)
 
-				r0 = dBm2m(dbP0[0], dbP0[1])
-				r1 = dBm2m(dbP1[0], dbP1[1])
-				r2 = dBm2m(dbP2[0], dbP2[1])
+				r0 = dBm_to_m(dbP0[0], dbP0[1])
+				r1 = dBm_to_m(dbP1[0], dbP1[1])
+				r2 = dBm_to_m(dbP2[0], dbP2[1])
 
 				r0 = round(r0, 2)
 				r1 = round(r1, 2)
@@ -246,9 +246,10 @@ def menu():
 				print('You are at: {}'.format(l))
 				return l
 
-		except NameError:
-			print(colored('Wrong format', 'red'))
-			get_apCoords()
+		# except NameError as e:
+		# 	print(e)
+		# 	print(colored('Wrong format', 'red'))
+		# 	get_apCoords()
 
 		except AccessPointError:
 			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
