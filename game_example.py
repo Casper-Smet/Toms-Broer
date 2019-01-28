@@ -91,7 +91,7 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
-        entered = True
+        global entered
         grid = matrix_reader()
         current_location = location_convert()
         counter = 0
@@ -118,8 +118,9 @@ class AutocompleteEntry(Entry):
                         row = path[x][0]
                         grid[row][column] = 4
                         print(grid[row][column])
-                    print('Regel 147:    ', grid)
+                    # print('Regel 147:    ', grid)
                     grid_draw(grid)
+                    entered = True
             if counter == 0:
                 print('This location does not exist, please choose another')
 
@@ -236,16 +237,11 @@ def game_main():
     clock = pygame.time.Clock()
 
     global entered
+
     entered = False
 
     # -------- Main Program Loop -----------
     while not done:
-        #Call location_convert()
-        current_location = location_convert()
-        #Set start location
-        # current_location = (10,7)
-        start = current_location
-
         if entered:
             #Call location_convert()
             current_location = location_convert()
@@ -257,7 +253,7 @@ def game_main():
         root.update()
 
         # Limit to 60 frames per second
-        clock.tick(30)
+        clock.tick(60)
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
@@ -277,7 +273,7 @@ logo = PhotoImage(file = 'pictures/tomsbroer.png')
 #     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
 lowbanner = PhotoImage(file = 'pictures/Banner.png')
 root.title('Tom\'s Broer')
-root.geometry("1280x720")
+root.geometry("1000x800")
 root.config(bg= 'white')
 banner1 = Label(root, image = logo, width = 1920, bg = '#303135')
 banner1.pack(pady=1)
