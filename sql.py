@@ -4,7 +4,8 @@ import mysql.connector
 
 def connect_database():
 	database = mysql.connector.connect(
-		host='145.89.166.209',
+		# host='145.89.166.209',
+		host='localhost',
 		user='tom',
 		password='broer'
 	)
@@ -37,14 +38,14 @@ def get_PoI():
 
 def one_upper():
 	poi_id = 1
-	update = "UPDATE points_of_interest SET searched = searched + 1 WHERE ID =" + str(poi_id)+ ";"
-	try:
-		database = connect_database()
-		cursor = database.cursor()
+	update = 'update points_of_interest set searched = searched + 1 where ID =' + str(poi_id)
+	
+	database = connect_database()
+	cursor = database.cursor()
+	
+	cursor.execute('use tomsbroer;')
+	cursor.execute(update)
+	database.commit()
 
-		cursor.execute('use tomsbroer;')
-		cursor.execute(update)
-	except:
-		one_upper()
-#get_PoI()
+# get_PoI()
 one_upper()
