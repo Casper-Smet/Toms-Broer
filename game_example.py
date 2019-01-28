@@ -91,6 +91,7 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
+        entered = True
         grid = matrix_reader()
         current_location = location_convert()
         counter = 0
@@ -234,7 +235,8 @@ def game_main():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
-
+    global entered
+    entered = False
 
     # -------- Main Program Loop -----------
     while not done:
@@ -244,20 +246,25 @@ def game_main():
         # current_location = (10,7)
         start = current_location
 
+        if entered:
+            #Call location_convert()
+            current_location = location_convert()
+            #Set start location
+            start = current_location
+            # Colours current position green.
+            grid[current_location[0]][current_location[1]] = 2
         #updates TKinter GUI
         root.update()
-        # colours current position green
-        if current_location:
-            grid[current_location[0]][current_location[1]] = 2
+
         # Limit to 60 frames per second
         clock.tick(30)
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
 
-        current_location = location_convert()
+        """current_location = location_convert()
         start = current_location
-        grid[start[0]][start[1]] = 2
+        grid[start[0]][start[1]] = 2"""
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
 
