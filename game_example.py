@@ -18,7 +18,7 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # List with all locations of interest
 lista = ['Robotarm','Snake','3D Printer','Soldeerplek','Server','Whiteboard','Werkbank']
-dictionary = {'Robotarm': (2, 19), 'Snake': (9, 19), '3D Printer': (20, 14), 'Soldeerplek': (2, 14), 'Server': (2, 9), 'Whiteboard': (21, 7), 'Werkbank': (2, 19)}
+dictionary = {'Robotarm': (2, 19), 'Snake': (9, 19), '3D Printer': (20, 18), 'Soldeerplek': (2, 14), 'Server': (2, 9), 'Whiteboard': (21, 7), 'Werkbank': (2, 19)}
 
 class AutocompleteEntry(Entry):
     def __init__(self, lista, *args, **kwargs):
@@ -105,12 +105,7 @@ class AutocompleteEntry(Entry):
             self.icursor(END)
 
         elif type(current_location) == list:
-            #grid = matrix_reader()
             start = location_convert()
-            """for x in range(1, len(grid) -1):
-                for i in (1, len(grid[0])-1):
-                    if grid[x][i] == 4:
-                        grid[x][i] = 0"""
             for q in dictionary:
                 if entry.get() == q:
                     counter = 1
@@ -252,53 +247,13 @@ def game_main():
     # -------- Main Program Loop -----------
     while not done:
         current_location = location_convert()
+        #current_location = [10,7]
         start = current_location
         grid[start[0]][start[1]] = 2
         #updates TKinter GUI
         root.update()
         if current_location:
             grid[current_location[0]][current_location[1]] = 2
-        """for event in pygame.event.get():  # User did something
-            if event.type == pygame.QUIT:  # If user clicked close
-                done = True  # Flag that we are done so we exit this loop
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                # User clicks the mouse. Get the position
-                pos = pygame.mouse.get_pos()
-                # Change the x/y screen coordinates to grid coordinates
-                column = pos[0] // (WIDTH + MARGIN)
-                row = pos[1] // (HEIGHT + MARGIN)
-
-                # Check if clicked space is first click.
-                if grid[row][column] != 1:
-                    if not start:
-                       # assign colour to space
-                        grid[row][column] = 2
-
-                      # Assign coördinates of click to start variable.
-                        start = (row, column)
-
-                    # Check if clicked space is second click.
-                    elif not end:
-
-                        # Assign colour to space.
-                        grid[row][column] = 3
-
-                        # Assign coördinates of click to end variable.
-                        end = (row, column)
-
-                        # Start A* pathfinding with given coördinates. Return results to path variable.
-                        path = dmain(start, end)
-
-                        # Sets all coördinates in path to colour.
-                        for x in range(1, len(path) - 1):
-                            column = path[x][1]
-                            row = path[x][0]
-                            grid[row][column] = 4
-                        print('Regel 278:     ', grid)
-                    # Print clicked coördinates (debug)
-                    print('Click ', pos, 'Grid coordinates: ', row, column)
-        """
-
         grid[current_location[0]][current_location[1]] = 0
         # Limit to 60 frames per second
         clock.tick(30)
