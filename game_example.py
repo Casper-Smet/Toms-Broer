@@ -1,24 +1,20 @@
 #!/usr/bin/python3
 
-import pygame, os, platform, re, time
+import pygame, os, platform, re, time, mysql.connector
 from AStar import *
 from tkinter import *
 from triangulation import *
+from sql import *
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
-PURPLE = (55, 29, 124)
-HEIGHT = WIDTH = 25
-MARGIN = 0
-WINDOW_SIZE = [499, 550]
-screen = pygame.display.set_mode(WINDOW_SIZE)
+# Initialize database connection
+database = connect_database()
 
 # List with all locations of interest
-lista = ['Robotarm','Snake','3D Printer','Soldeerplek','Server','Whiteboard','Werkbank']
-dictionary = {'Robotarm': (2, 19), 'Snake': (9, 19), '3D Printer': (20, 18), 'Soldeerplek': (2, 14), 'Server': (2, 9), 'Whiteboard': (21, 7), 'Werkbank': (2, 19)}
+dictionary = get_PoI(database)
+lista = list()
+for i in dictionary.keys():
+    lista.append(i)
+
 
 class AutocompleteEntry(Entry):
     def __init__(self, lista, *args, **kwargs):
@@ -109,6 +105,7 @@ class AutocompleteEntry(Entry):
             for q in dictionary:
                 if entry.get() == q:
                     counter = 1
+                    one_upper(q)
                     end = dictionary['{}'.format(q)]
                     print(end)
                     path = dmain(start, end)
@@ -129,6 +126,7 @@ class AutocompleteEntry(Entry):
         pattern = re.compile('.*' + self.var.get() + '.*')
         return [w for w in self.lista if re.match(pattern, w)]
 
+# Initializes background picture
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
         pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
@@ -136,6 +134,7 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
 
+# Draws grid to screen
 def grid_draw(grid):
     # Set the HEIGHT and WIDTH of the screen
     WINDOW_SIZE = [499, 550]
@@ -155,10 +154,8 @@ def grid_draw(grid):
     MARGIN = 0
 
     # Define some colors
-    BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     GREEN = (0, 255, 0)
-    RED = (255, 0, 0)
     BLUE = (0, 0, 255)
     PURPLE = (55, 29, 124)
 
@@ -172,8 +169,6 @@ def grid_draw(grid):
     for row in range(len(grid)):
         for column in range(len(grid[0])):
             color = WHITE
-            #if grid[row][column] == 1:
-                #color = RED
             if grid[row][column] == 2:
                 color = GREEN
             if grid[row][column] == 3:
@@ -181,9 +176,9 @@ def grid_draw(grid):
             if grid[row][column] == 4:
                 color = BLUE
                 print(row,column)
-            #print(screen)
             if color != WHITE:
                 pygame.draw.rect(screen, color, [(MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN, WIDTH, HEIGHT])
+
 
 def location_convert():
     try:
@@ -213,6 +208,7 @@ def location_convert():
 
     return current_location
 
+
 def game_main():
 
     # Create a 2 dimensional array based on binary map.
@@ -222,9 +218,6 @@ def game_main():
     global locationlist
     locationlist = []
 
-    current_location = location_convert()
-    start = current_location
-    grid[start[0]][start[1]] = 2
 
     # Draw the grid.
     grid_draw(grid)
@@ -234,33 +227,35 @@ def game_main():
     # Set title of screen
     pygame.display.set_caption('Array Backed Grid')
 
-    # Loop until the user clicks the close button.
+    # Loop until done
     done = False
 
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
-    # Initialize start and end_node
-    start = end = tuple()
 
 
 
     # -------- Main Program Loop -----------
     while not done:
+        #Call location_convert()
         current_location = location_convert()
-        #current_location = [10,7]
+        #Set start location
         start = current_location
-        grid[start[0]][start[1]] = 2
+
         #updates TKinter GUI
         root.update()
+        # colours current position green
         if current_location:
             grid[current_location[0]][current_location[1]] = 2
-        grid[current_location[0]][current_location[1]] = 0
         # Limit to 60 frames per second
         clock.tick(30)
 
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
 
+        current_location = location_convert()
+        start = current_location
+        grid[start[0]][start[1]] = 2
 # Be IDLE friendly. If you forget this line, the program will 'hang'
 # on exit.
 
