@@ -158,29 +158,21 @@ def menu():
 	class AccessPointError(Exception):
 		pass
 
-	# print('\u001b[1mThis applet will attempt to triangulate your position based on WiFi Access Points\u001b[0m')
-
 	def get_apNames():
+
 		nonlocal AP0, AP1, AP2
-		# print('Please enter the names for the three Access Points')
-		# AP0 = input('Access Point 1: ')
-		# AP1 = input('Access Point 2: ')
-		# AP2 = input('Access Point 3: ')
+
 		return get_apCoords()
 
 	def get_apCoords():
+
 		nonlocal AP0, AP1, AP2, P0, P1, P2
-		# print('\u001b[1mNow you need to enter the coordinates for the AP\'s based on how many meters they are from you\u001b[0m')
-		# print('\u001b[1mRequired format: [x,y]\u001b[0m')
+
 		try:
-			# P0 = eval(input('Access Point 1: '))
-			# P1 = eval(input('Access Point 2: '))
-			# P2 = eval(input('Access Point 3: '))
 
 			if P0 == P1 or P1 == P2 or P2 == P0:
 				raise AccessPointError
-			# if (type(P0) or type(P1) or type(P2)) is not (list or tuple):
-			# 	raise NameError
+
 			else:
 
 				dbP0 = get_dBm(AP0)
@@ -207,11 +199,6 @@ def menu():
 		except NameError:
 			print(colored('Wrong format', 'red'))
 			get_apCoords()
-
-		# except ValueError as e:
-		# 	print(colored(e, 'red'))
-		# 	print(colored('Something went wrong, please re-enter the AP Data', 'red'))
-		# 	get_apNames()
 
 		except AccessPointError:
 			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))

@@ -1,13 +1,9 @@
 #!/usr/bin/python3
 
-import pygame
+import pygame, os, platform, re, time
 from AStar import *
 from tkinter import *
 from triangulation import *
-import os
-import platform
-import re
-import time
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -21,8 +17,8 @@ WINDOW_SIZE = [499, 550]
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # List with all locations of interest
-lista = ['Robot arm','Snake','3D Printer','Soldeerplek','Server','Whiteboard','Werkbank']
-dictionary = {'Robot arm': (2, 19), 'Snake': (9, 19), '3D Printer': (20, 14), 'Soldeerplek': (2, 14), 'Server': (2, 9), 'Whiteboard': (21, 7), 'Werkbank': (2, 19)}
+lista = ['Robotarm','Snake','3D Printer','Soldeerplek','Server','Whiteboard','Werkbank']
+dictionary = {'Robotarm': (2, 19), 'Snake': (9, 19), '3D Printer': (20, 14), 'Soldeerplek': (2, 14), 'Server': (2, 9), 'Whiteboard': (21, 7), 'Werkbank': (2, 19)}
 
 class AutocompleteEntry(Entry):
     def __init__(self, lista, *args, **kwargs):
