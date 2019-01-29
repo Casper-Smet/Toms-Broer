@@ -199,14 +199,14 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
 def chokepoint(maze, start, end, path):
     """First sets the end of the first run through astar() as start and sets end (which was endstored) as end
     maze = grid without the path
-    path = all coordinates of the current path from initial start to checkpoint"""
+    path = all coordinates of the current path from initial start to choke point"""
     path1 = astar(maze, start, end, 0, 0, 0)
     path = path1 + path
     return path
 
 
 def doublechokepoint(maze, start, end, path, endstored):
-    """First sets the end of the first run through astar() as start and sets the next checkpoint as end, lastly sets
+    """First sets the end of the first run through astar() as start and sets the next choke point as end, lastly sets
     that end as start and sets the endstored (which is the initial end) as end"""
     path1 = astar(maze, start, end, 0, endstored, 0)
     path = path1 + path
