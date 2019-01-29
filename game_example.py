@@ -18,6 +18,7 @@ for i in dictionary.keys():
 
 class AutocompleteEntry(Entry):
     def __init__(self, lista, *args, **kwargs):
+        """Checks if buttons are pressed"""
 
         Entry.__init__(self, *args, **kwargs)
         self.lista = lista
@@ -34,6 +35,7 @@ class AutocompleteEntry(Entry):
         self.lb_up = False
 
     def changed(self, name, index, mode):
+        """If something is typed into the entry box"""
 
         if self.var.get() == '':
             self.lb.destroy()
@@ -57,6 +59,7 @@ class AutocompleteEntry(Entry):
                     self.lb_up = False
 
     def selection(self, event):
+        """If right arrow key is pressed"""
 
         if self.lb_up:
             self.var.set(self.lb.get(ACTIVE))
@@ -65,6 +68,7 @@ class AutocompleteEntry(Entry):
             self.icursor(END)
 
     def up(self, event):
+        """If up arrow key is pressed"""
 
         if self.lb_up:
             if self.lb.curselection() == ():
@@ -78,6 +82,7 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def down(self, event):
+        """If down arrow key is pressed"""
 
         if self.lb_up:
             if self.lb.curselection() == ():
@@ -91,17 +96,19 @@ class AutocompleteEntry(Entry):
                 self.lb.activate(index)
 
     def enter(self, event):
+        """If enter key is pressed"""
+
         global entered
         grid = matrix_reader()
-        current_location = location_convert()
         counter = 0
-        if self.lb_up:
+
+        if self.lb_up:  # Runs when drop-down list is active
             self.var.set(self.lb.get(ACTIVE))
             self.lb.destroy()
             self.lb_up = False
             self.icursor(END)
 
-        elif type(current_location) == list:
+        else:  # Runs when drop-down list is not active
             start = location_convert()
             for q in dictionary:
                 if entry.get() == q:
@@ -111,17 +118,16 @@ class AutocompleteEntry(Entry):
                     print(end)
                     path = dmain(start, end)
                     print(path)
-                    grid[end[0]][end[1]] = 3
+                    grid[end[0]][end[1]] = 3  # Sets the end to 3 on the grid
 
-                    for x in range(1, len(path) - 1):
+                    for x in range(1, len(path) - 1):  # Sets the path to 4 on the grid
                         column = path[x][1]
                         row = path[x][0]
                         grid[row][column] = 4
                         print(grid[row][column])
-                    # print('Regel 147:    ', grid)
                     grid_draw(grid)
                     entered = True
-            if counter == 0:
+            if counter == 0:  # Runs if the entered word is not a point of interest
                 print('This location does not exist, please choose another')
 
     def comparison(self):
@@ -131,7 +137,7 @@ class AutocompleteEntry(Entry):
 # Initializes background picture
 class Background(pygame.sprite.Sprite):
     def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
         self.image = pygame.image.load(image_file)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
@@ -144,12 +150,10 @@ def grid_draw(grid):
     BackGround = Background('maps/background-blueprintv3.png', [0, 0])
 
     # This sets the WIDTH and HEIGHT of each grid location
-    # WIDTH = 13
-    # HEIGHT = 33
-    HEIGHT = WIDTH = 25  # Needs adjusting
+    HEIGHT = WIDTH = 25
 
+    # Determines starting point on startup
     current_location = location_convert()
-    # current_location = (10, 7)
     start = current_location
     grid[start[0]][start[1]] = 2
 
@@ -165,8 +169,6 @@ def grid_draw(grid):
     # Set the screen background
     screen.fill(WHITE)
     screen.blit(BackGround.image, BackGround.rect)
-
-
 
     # Draw the grid
     for row in range(len(grid)):
@@ -184,8 +186,9 @@ def grid_draw(grid):
 
 
 def location_convert():
+    """Finds your location using triangulation.py"""
     try:
-        current_location = menu()
+        current_location = menu()  # Finds your location on the map
     except:
         time.sleep(0.2)
         current_location = menu()
@@ -213,6 +216,7 @@ def location_convert():
 
 
 def game_main():
+    """Runs once on start up"""
 
     # Create a 2 dimensional array based on binary map.
     global grid
@@ -241,15 +245,15 @@ def game_main():
     entered = False
 
     # -------- Main Program Loop -----------
-    while not done:
+    while not done:  # Ends when
         if entered:
-            #Call location_convert()
+            # Call location_convert()
             current_location = location_convert()
-            #Set start location
-            start = current_location
-            # Colours current position green.
+
+            # Sets current location to 2 on the grid.
             grid[current_location[0]][current_location[1]] = 2
-        #updates TKinter GUI
+
+        # Updates TKinter GUI
         root.update()
 
         # Limit to 60 frames per second
@@ -258,19 +262,9 @@ def game_main():
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
 
-        """current_location = location_convert()
-        start = current_location
-        grid[start[0]][start[1]] = 2"""
-# Be IDLE friendly. If you forget this line, the program will 'hang'
-# on exit.
-
 # GUI
 root = Tk()
 logo = PhotoImage(file = 'pictures/tomsbroer.png')
-# try:
-#     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.ico')
-# except:
-#     icon = root.wm_iconbitmap(bitmap = 'pictures/icon.bmp')
 lowbanner = PhotoImage(file = 'pictures/Banner.png')
 root.title('Tom\'s Broer')
 root.geometry("1000x800")
@@ -284,11 +278,6 @@ embed.pack(pady=1, side = LEFT)
 entry = AutocompleteEntry(lista, root, width=25, font = ('Arial', 20))
 entry.pack(pady=20, padx= 25,)
 root.update()
-
-# def pushed():
-#     lbl = Label(root, text = 'Hello')
-#     lbl.pack()
-#     lbl.configure(text='Searched!')
 
 if platform.system == 'Windows':
     os.environ['SDL_VIDEODRIVER'] = 'windib'

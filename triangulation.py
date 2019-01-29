@@ -3,11 +3,11 @@ import platform
 Windows = platform.system() == 'Windows'
 
 def cc_intersection(P0, P1, r0, r1):
-	''' Circle-Circle Intersection
+	""" Circle-Circle Intersection
 	P0, P1 are coordinates of circle centers
 	r0, r1 are the radii of said circles
 	Returns ([x1,y1],[x2,y2])
-	'''
+	"""
 
 	from math import sqrt, fabs
 
@@ -33,12 +33,12 @@ def cc_intersection(P0, P1, r0, r1):
 	return P3_1, P3_2
 
 def calc_center(p):
-	''' Calculate Center
+	""" Calculate Center
 	p is a list of intersection points
 	this function turns those points into lines according to y=ax+b
 	raises Exception when the lines don't intersect
 	returns [y,x]
-	'''
+	"""
 
 	# lines are sets of two coordinates through which the line travels
 	# eg. l1 = [[1,3],[4,6]]
@@ -61,13 +61,13 @@ def calc_center(p):
 	return [int(round(21-y)), int(round(x))]
 
 def location(P0, P1, P2, r0, r1, r2):
-	''' Location
+	""" Location
 	P0, P1, P2 are lists containing coordinates of circle centers
 	r0, r1, r2 are integers describing the radii of the circles
 	calls cc_intersection to determine the intersection
 	if three points within p0, p1 and p2 are equal return said point as [x,y]
 	else calculate the center of those points
-	'''
+	"""
 
 	p0 = cc_intersection(P0, P1, r0, r1)
 	p1 = cc_intersection(P1, P2, r1, r2)
@@ -89,11 +89,11 @@ def location(P0, P1, P2, r0, r1, r2):
 					return calc_center(p)
 
 def dBm_to_m(MHz, dBm):
-	''' Decibel-meter to Meter
+	""" Decibel-meter to Meter
 	MHz is an int describing the frequency of the wifi access point in MHz
 	dBm is an int describing the signal strength of said access point in dBm
 	returns the meters as int
-	'''
+	"""
 	from math import log10
 
 	global Windows
@@ -111,12 +111,12 @@ def dBm_to_m(MHz, dBm):
 	return meters
 
 def get_dBm(APName):
-	''' Get Signal Strength
+	""" Get Signal Strength
 	APName is a string containing the name of the access point of which you want the signal strength
 	This function runs a command on your system based on the detected Operating System to scan for the access point
-	The result of the scan is written to a file and then read as a list to easily split the contents we need: signal strength and frequency
-	returns the signal strength and frequency as integers
-	'''
+	The result of the scan is written to a file and then read as a list to easily split the contents we need: signal
+	strength and frequency returns the signal strength and frequency as integers
+	"""
 
 	import subprocess
 
@@ -173,12 +173,12 @@ def get_dBm(APName):
 	return frequency, signal
 
 def menu():
-	''' Menu
+	""" Menu
 	The same as Main() but Menu() because it used to be a menu in days past asking for names and coordinates of access points
 	In this function you can set the names and coordinates of the access points
 	P0, P1, P2 are the coordinates: [x,y]
 	AP0, AP1, AP2 are the names as string
-	'''
+	"""
 
 	print('Scanning...')
 
@@ -193,28 +193,28 @@ def menu():
 	AP2 = 'v1f4ap3'
 
 	class AccessPointError(Exception):
-		''' An exception to raise when something is not quite right with the access points
-		does nothing else'''
+		""" An exception to raise when something is not quite right with the access points
+		does nothing else"""
 
 		pass
 
 	def get_apNames():
-		''' Calls get_apCoords for some inexplicable reason...
+		""" Calls get_apCoords for some inexplicable reason...
 		this function might have done something at some point, but it no longer does
-		I don't really have a clue :/'''
+		I don't really have a clue :/"""
 
 		nonlocal AP0, AP1, AP2
 
 		return get_apCoords()
 
 	def get_apCoords():
-		''' Get your location
+		""" Get your location
 		uses nonlocal variables as seen below
 		raises (and catches) AccessPointError when any of the access points have the same coordinates
 		catches NameError when something was entered the wrong way, this dates back to when it was a menu
 		calls get_dBm, dBm2m to get the users location
 		returns (and prints) the location of the user as [y,x]
-		'''
+		"""
 
 		nonlocal AP0, AP1, AP2, P0, P1, P2
 
@@ -254,5 +254,7 @@ def menu():
 		except AccessPointError:
 			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
 			get_apCoords()
+
+
 
 	return get_apNames()

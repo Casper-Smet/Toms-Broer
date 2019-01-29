@@ -120,8 +120,6 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
                 if startcompartment in (1, 2, 3, 4, 5, '1b', '2b', '2c'):
                     path = doublechokepoint(maze, (9, 14), (11, 2), path, endstored)
 
-
-
             # Choke point 4
 
             if compartment == 6:
@@ -199,12 +197,17 @@ def astar(maze, start, end, compartment, endstored, startcompartment):
 
 
 def chokepoint(maze, start, end, path):
+    """First sets the end of the first run through astar() as start and sets end (which was endstored) as end
+    maze = grid without the path
+    path = all coordinates of the current path from initial start to checkpoint"""
     path1 = astar(maze, start, end, 0, 0, 0)
     path = path1 + path
     return path
 
 
 def doublechokepoint(maze, start, end, path, endstored):
+    """First sets the end of the first run through astar() as start and sets the next checkpoint as end, lastly sets
+    that end as start and sets the endstored (which is the initial end) as end"""
     path1 = astar(maze, start, end, 0, endstored, 0)
     path = path1 + path
     path2 = astar(maze, end, endstored, 0, 0, 0)
@@ -213,6 +216,7 @@ def doublechokepoint(maze, start, end, path, endstored):
 
 
 def matrix_reader():
+    """Opens the matrix and sets it in a two-dimensional list, also known as the grid"""
     with open(r"maps/mapmatrix04v3.txt", "r") as map:
         reader = c.reader(map)
         matrix = list()
@@ -227,11 +231,13 @@ def matrix_reader():
 
 
 def dmain(start, end):
+    """Runs once enter is pressed (from game_example.py)"""
     compartment = int()
     startcompartment = int()
     maze = matrix_reader()
     endfirst = end
 
+    # Determines in which compartment you start and end
     for i in range(0, 2):  # Upper Left
         for j in range(0, 8):
             if end == (j, i):
@@ -293,7 +299,7 @@ def dmain(start, end):
             if start == (j, i):
                 startcompartment = 6
 
-    if end == (10, 0) or end == (10, 1):  #  Above Lower Left
+    if end == (10, 0) or end == (10, 1):  # Above Lower Left
         compartment = '6b'
     if start == (10, 0) or start == (10, 1):
         startcompartment = '6b'
@@ -346,7 +352,6 @@ def dmain(start, end):
 
     # Checks if it has to pass a choke point or not for all routes
     # Choke point 1
-
     if compartment == 1:
         if startcompartment in (2, 3, 4, 5, '2c', '8b'):
             endfirst = (7, 2) # Choke point 1
@@ -356,7 +361,6 @@ def dmain(start, end):
             endfirst = (7, 2)
 
     # Choke point 2
-
     if compartment == '2c':
         if start == (8, 11):
             endfirst = (4, 7)  # Special choke point 3
@@ -368,7 +372,6 @@ def dmain(start, end):
             endfirst = (3, 7)
 
     # Choke point 3
-
     if compartment in (1, 2, 3, 4, '1b', '2b', '2c'):
         if startcompartment in (6, 7, 8, '6b', '7b', '8c', '8d'):
             endfirst = (9, 14)  # Choke point 3
@@ -387,7 +390,6 @@ def dmain(start, end):
             endfirst = (9, 14)
 
     # Choke point 4
-
     if compartment == 6:
         if startcompartment in (7, 8, '8b', '8c', '8d'):
             endfirst = (11, 2)  # Choke point 4
@@ -401,7 +403,6 @@ def dmain(start, end):
             endfirst = (11, 2)
 
     # Choke point 5
-
     if compartment == 7:
         if startcompartment in (8, '8b', '8d'):
             endfirst = (11, 10)  # Choke point 5
