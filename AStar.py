@@ -231,7 +231,7 @@ def matrix_reader():
 
 
 def dmain(start, end):
-    """Runs once enter is pressed (from game_example.py)"""
+    """Runs once enter is pressed (from application.py)"""
     compartment = int()
     startcompartment = int()
     maze = matrix_reader()
