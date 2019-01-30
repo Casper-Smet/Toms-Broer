@@ -125,6 +125,7 @@ class AutocompleteEntry(Entry):
                         row = path[x][0]
                         grid[row][column] = 4
                         print(grid[row][column])
+                    grid[start[0]][start[1]] = 2   
                     grid_draw(grid)
                     entered = True
             if counter == 0:  # Runs if the entered word is not a point of interest
@@ -153,9 +154,19 @@ def grid_draw(grid):
     HEIGHT = WIDTH = 25
 
     # Determines starting point on startup
-    current_location = location_convert()
-    start = current_location
-    grid[start[0]][start[1]] = 2
+    print('======[Grid Draw]======')
+    global entered
+
+    if entered:
+        # Call location_convert()
+        current_location = location_convert()
+
+        # Sets current location to 2 on the grid.
+        grid[current_location[0]][current_location[1]] = 2
+
+    # current_location = location_convert()
+    # start = current_location
+    # grid[start[0]][start[1]] = 2
 
     # This sets the margin between each cell
     MARGIN = 0
@@ -213,7 +224,7 @@ def location_convert():
     current_location[1] = int(sum(xTemp) / len(xTemp))
 
     return current_location
-
+entered = False
 
 def game_main():
     """Runs once on start up"""
@@ -240,18 +251,16 @@ def game_main():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
-    global entered
-
-    entered = False
+    global entered    
 
     # -------- Main Program Loop -----------
     while not done:  # Ends when
-        if entered:
-            # Call location_convert()
-            current_location = location_convert()
+        # if entered:
+        #     # Call location_convert()
+        #     current_location = location_convert()
 
-            # Sets current location to 2 on the grid.
-            grid[current_location[0]][current_location[1]] = 2
+        #     # Sets current location to 2 on the grid.
+        #     grid[current_location[0]][current_location[1]] = 2
 
         # Updates TKinter GUI
         root.update()
