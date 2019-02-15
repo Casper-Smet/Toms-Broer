@@ -18,7 +18,7 @@ def cc_intersection(P0, P1, r0, r1):
 	d = sqrt((P0[0]-P1[0])**2+(P0[1]-P1[1])**2)
 
 	a = (r0**2-r1**2+d**2)/(2*d)
-
+	
 	h = sqrt(fabs(r0**2-a**2))
 
 	P2[0]   = P0[0]+a*(P1[0]-P0[0])/d
@@ -254,7 +254,5 @@ def menu():
 		except AccessPointError:
 			print(colored('Something is wrong with the Access Points coordinates, please re-enter', 'red'))
 			get_apCoords()
-
-
 
 	return get_apNames()
